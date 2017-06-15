@@ -9,11 +9,24 @@ namespace projetoBase {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+	using namespace System::Collections::Generic;		//List<...>
+	using namespace Devart::Data::PostgreSql;
+
 	/// <summary>
 	/// Summary for Form1
 	/// </summary>
-	public ref class Form1 : public System::Windows::Forms::Form
-	{
+	public ref class Form1 : public System::Windows::Forms::Form{
+	private:
+		//propriedades do personagem atual
+		int id, raca, classe;
+		int experiencia, nivel, mana_max, mana, vida_max, vida;
+		int forca, agilidade, inteligencia, vontade;
+		int bloqueio, esquiva, determinacao;
+		int basica, pesada, maxima;
+		//!propriedades do personagem atual
+
+		DateTime open;	//o memento de criacao do form, usado para compor o numero aleatorio do dado
+
 	public:
 		Form1(void)
 		{
@@ -21,6 +34,8 @@ namespace projetoBase {
 			//
 			//TODO: Add the constructor code here
 			//
+
+			open = DateTime::Now;
 		}
 
 	protected:
@@ -60,8 +75,10 @@ namespace projetoBase {
 		System::Windows::Forms::TextBox^  txt_vida;
 		System::Windows::Forms::Label^  label3;
 		System::Windows::Forms::Panel^  panel1;
-		System::Windows::Forms::Label^  lbl_mana;
-		System::Windows::Forms::Label^  lbl_vida;
+	private: System::Windows::Forms::Label^  lbl_mana_max;
+
+	private: System::Windows::Forms::Label^  lbl_vida_max;
+
 		System::Windows::Forms::Button^  button2;
 		System::Windows::Forms::Button^  button1;
 		System::Windows::Forms::Label^  label9;
@@ -121,33 +138,15 @@ namespace projetoBase {
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_save_as;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_load;
 		Devart::Data::PostgreSql::PgSqlConnection^  pgSqlConnection1;
-
-
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::IContainer^  components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		/*void InitializeComponent(void)
-		{
-			this->SuspendLayout();
-			// 
-			// Form1
-			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 261);
-			this->Name = L"Form1";
-			this->Text = L"Form1";
-			this->ResumeLayout(false);
-
-		}*/
-
 		void InitializeComponent(void){
 			this->components = (gcnew System::ComponentModel::Container());
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->lbl_personagem = (gcnew System::Windows::Forms::Label());
 			this->lbl_raca = (gcnew System::Windows::Forms::Label());
@@ -168,14 +167,16 @@ namespace projetoBase {
 			this->dd_file = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->dd_file_new = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_file_save = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dd_file_save_as = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dd_file_load = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_file_export = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_file_import = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->btn_d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->txt_vida = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->lbl_mana = (gcnew System::Windows::Forms::Label());
-			this->lbl_vida = (gcnew System::Windows::Forms::Label());
+			this->lbl_mana_max = (gcnew System::Windows::Forms::Label());
+			this->lbl_vida_max = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label9 = (gcnew System::Windows::Forms::Label());
@@ -227,8 +228,6 @@ namespace projetoBase {
 			this->label33 = (gcnew System::Windows::Forms::Label());
 			this->label34 = (gcnew System::Windows::Forms::Label());
 			this->pgSqlConnection1 = (gcnew Devart::Data::PostgreSql::PgSqlConnection());
-			this->dd_file_save_as = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->dd_file_load = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pnl_desc->SuspendLayout();
 			this->toolStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
@@ -429,32 +428,45 @@ namespace projetoBase {
 			// dd_file_new
 			// 
 			this->dd_file_new->Name = L"dd_file_new";
-			this->dd_file_new->Size = System::Drawing::Size(152, 22);
+			this->dd_file_new->Size = System::Drawing::Size(150, 22);
 			this->dd_file_new->Text = L"Novo";
 			// 
 			// dd_file_save
 			// 
 			this->dd_file_save->Enabled = false;
 			this->dd_file_save->Name = L"dd_file_save";
-			this->dd_file_save->Size = System::Drawing::Size(152, 22);
+			this->dd_file_save->Size = System::Drawing::Size(150, 22);
 			this->dd_file_save->Text = L"Salvar";
+			// 
+			// dd_file_save_as
+			// 
+			this->dd_file_save_as->Enabled = false;
+			this->dd_file_save_as->Name = L"dd_file_save_as";
+			this->dd_file_save_as->Size = System::Drawing::Size(150, 22);
+			this->dd_file_save_as->Text = L"Salvar Como";
+			// 
+			// dd_file_load
+			// 
+			this->dd_file_load->Name = L"dd_file_load";
+			this->dd_file_load->Size = System::Drawing::Size(150, 22);
+			this->dd_file_load->Text = L"Carregar";
+			this->dd_file_load->Click += gcnew System::EventHandler(this, &Form1::load_click);
 			// 
 			// dd_file_export
 			// 
 			this->dd_file_export->Name = L"dd_file_export";
-			this->dd_file_export->Size = System::Drawing::Size(152, 22);
+			this->dd_file_export->Size = System::Drawing::Size(150, 22);
 			this->dd_file_export->Text = L"Exportar";
 			// 
 			// dd_file_import
 			// 
 			this->dd_file_import->Name = L"dd_file_import";
-			this->dd_file_import->Size = System::Drawing::Size(152, 22);
+			this->dd_file_import->Size = System::Drawing::Size(150, 22);
 			this->dd_file_import->Text = L"Importar";
 			// 
 			// btn_d6
 			// 
 			this->btn_d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
-			this->btn_d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_d6.Image")));
 			this->btn_d6->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->btn_d6->Name = L"btn_d6";
 			this->btn_d6->Size = System::Drawing::Size(24, 22);
@@ -481,8 +493,8 @@ namespace projetoBase {
 			// 
 			// panel1
 			// 
-			this->panel1->Controls->Add(this->lbl_mana);
-			this->panel1->Controls->Add(this->lbl_vida);
+			this->panel1->Controls->Add(this->lbl_mana_max);
+			this->panel1->Controls->Add(this->lbl_vida_max);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Controls->Add(this->button1);
 			this->panel1->Controls->Add(this->label9);
@@ -494,23 +506,23 @@ namespace projetoBase {
 			this->panel1->Size = System::Drawing::Size(97, 84);
 			this->panel1->TabIndex = 16;
 			// 
-			// lbl_mana
+			// lbl_mana_max
 			// 
-			this->lbl_mana->AutoSize = true;
-			this->lbl_mana->Location = System::Drawing::Point(63, 39);
-			this->lbl_mana->Name = L"lbl_mana";
-			this->lbl_mana->Size = System::Drawing::Size(24, 13);
-			this->lbl_mana->TabIndex = 21;
-			this->lbl_mana->Text = L"/60";
+			this->lbl_mana_max->AutoSize = true;
+			this->lbl_mana_max->Location = System::Drawing::Point(63, 39);
+			this->lbl_mana_max->Name = L"lbl_mana_max";
+			this->lbl_mana_max->Size = System::Drawing::Size(24, 13);
+			this->lbl_mana_max->TabIndex = 21;
+			this->lbl_mana_max->Text = L"/60";
 			// 
-			// lbl_vida
+			// lbl_vida_max
 			// 
-			this->lbl_vida->AutoSize = true;
-			this->lbl_vida->Location = System::Drawing::Point(15, 39);
-			this->lbl_vida->Name = L"lbl_vida";
-			this->lbl_vida->Size = System::Drawing::Size(24, 13);
-			this->lbl_vida->TabIndex = 20;
-			this->lbl_vida->Text = L"/60";
+			this->lbl_vida_max->AutoSize = true;
+			this->lbl_vida_max->Location = System::Drawing::Point(15, 39);
+			this->lbl_vida_max->Name = L"lbl_vida_max";
+			this->lbl_vida_max->Size = System::Drawing::Size(24, 13);
+			this->lbl_vida_max->TabIndex = 20;
+			this->lbl_vida_max->Text = L"/60";
 			// 
 			// button2
 			// 
@@ -1019,20 +1031,6 @@ namespace projetoBase {
 			this->pgSqlConnection1->CommitTimeout = 0;
 			this->pgSqlConnection1->Name = L"pgSqlConnection1";
 			// 
-			// dd_file_save_as
-			// 
-			this->dd_file_save_as->Enabled = false;
-			this->dd_file_save_as->Name = L"dd_file_save_as";
-			this->dd_file_save_as->Size = System::Drawing::Size(152, 22);
-			this->dd_file_save_as->Text = L"Salvar Como";
-			// 
-			// dd_file_load
-			// 
-			this->dd_file_load->Name = L"dd_file_load";
-			this->dd_file_load->Size = System::Drawing::Size(152, 22);
-			this->dd_file_load->Text = L"Carregar";
-			this->dd_file_load->Click += gcnew System::EventHandler(this, &Form1::load_click);
-			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1077,7 +1075,92 @@ namespace projetoBase {
 #pragma endregion
 
 		System::Void load_click(System::Object^  sender, System::EventArgs^  e){
-			//load from db
+			//Abre uma janela para perguntar o nome do personagem
+			//loadPersonagem(idDoPersonagem)
+		}
+
+		//tem que testar
+		void loadPersonagem(int _id){	//id do personagem
+			//PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, "+
+			//"raca, classe, atributos, defesa, carga  FROM personagem WHERE id = " + id, pgSqlConnection1);
+			PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, "+
+			//													 0		1			2		3			4			5		6		7		8		9
+				"raca, classe, atributos[1], atributos[2], atributos[3], atributos[4], defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3]  FROM personagem WHERE id = "+_id, pgSqlConnection1);
+			//		10		11		12			13			14				15			16			17			18			19		20			21
+			
+			pgSqlConnection1->Open();
+			PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+			try{
+				//while(pgReader->Read()){
+				if(pgReader->Read()){	//vai ler só uma linha, a do personagem atual
+					id =				Int32::Parse(pgReader->GetString(0));
+					
+					lbl_personagem->Text = pgReader->GetString(1);
+					lbl_jogador->Text = pgReader->GetString(2);
+					lbl_motivacao->Text = pgReader->GetString(3);
+					
+					experiencia			= Int32::Parse(pgReader->GetString(4));
+					nivel				= Int32::Parse(pgReader->GetString(5));
+					mana_max			= Int32::Parse(pgReader->GetString(6));
+					mana				= Int32::Parse(pgReader->GetString(7));
+					vida_max			= Int32::Parse(pgReader->GetString(8));
+					vida				= Int32::Parse(pgReader->GetString(9));
+
+					raca =				Int32::Parse(pgReader->GetString(10));
+					classe =			Int32::Parse(pgReader->GetString(11));
+
+					forca =				Int32::Parse(pgReader->GetString(12));
+					agilidade =			Int32::Parse(pgReader->GetString(13));
+					inteligencia =		Int32::Parse(pgReader->GetString(14));
+					vontade =			Int32::Parse(pgReader->GetString(15));
+
+					bloqueio =			Int32::Parse(pgReader->GetString(16));
+					esquiva =			Int32::Parse(pgReader->GetString(17));
+					determinacao =		Int32::Parse(pgReader->GetString(18));
+					basica =			Int32::Parse(pgReader->GetString(19));
+					pesada =			Int32::Parse(pgReader->GetString(20));
+					maxima =			Int32::Parse(pgReader->GetString(21));
+
+					lbl_experiencia->Text	= "" + experiencia;
+					lbl_nivel->Text			= "" + nivel;
+
+					lbl_mana_max->Text		= "" + mana_max;
+					txt_mana->Text			= "" + mana;
+					lbl_vida_max->Text		= "" + vida_max;
+					txt_vida->Text			= "" + vida;
+
+					txt_forca->Text =			"" + forca;
+					txt_agilidade->Text =		"" + agilidade;
+					txt_inteligencia->Text =	"" + inteligencia;
+					txt_vontade->Text =			"" + vontade;
+					
+					txt_defesa_bloqueio->Text = "" + bloqueio;
+					txt_defesa_esquiva->Text = "" + esquiva;
+					txt_defesa_determinacao->Text = "" + determinacao;
+
+					txt_carga_basica->Text = ""+ basica;
+					txt_carga_pesada->Text = ""+ pesada;
+					txt_carga_maxima->Text = ""+ maxima;
+
+					//le a raça e a classe pelos id de cada tabela armazenados na tabela personagem
+					PgSqlCommand^ pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM raca WHERE id = " + raca, pgSqlConnection1);
+					PgSqlDataReader^ pgReader2 = pgCommand2->ExecuteReader();
+					pgReader2->Read();
+					lbl_raca->Text = pgReader2->GetString(0);
+
+					pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM classe WHERE id = " + classe, pgSqlConnection1);
+					pgReader2 = pgCommand2->ExecuteReader();
+					pgReader2->Read();
+					lbl_classe->Text = pgReader2->GetString(0);
+				}
+			} finally {
+				//pgReader->Close();
+				//pgSqlConnection1->Close();
+			}
+		}
+
+		int rand6(){
+			return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6;
 		}
 	};
 }
