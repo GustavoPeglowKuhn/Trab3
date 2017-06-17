@@ -2,6 +2,7 @@
   projetoBase.FormFicha.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormNewEquip.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormNovo.resources - Embedded, ContainedInManifestFile, 
+  projetoBase.FormRemoveItem.resources - Embedded, ContainedInManifestFile, 
 ImageRuntimeVersion: v4.0.30319
 Assembly projetoBase, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
 	hash=SHA1, flags=PublicKey
@@ -28,7 +29,10 @@ Class projetoBase.FormNewEquip: AutoLayout, AnsiClass, Class, Public, BeforeFiel
     Void .ctor(Devart.Data.PostgreSql.PgSqlConnection, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class projetoBase.FormNovo: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
-    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+    Void .ctor(System.Windows.Forms.Form, Devart.Data.PostgreSql.PgSqlConnection): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class projetoBase.FormRemoveItem: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(Devart.Data.PostgreSql.PgSqlConnection, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class projetoBase.FormFicha: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(System.Windows.Forms.Form, Devart.Data.PostgreSql.PgSqlConnection, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName

@@ -1,5 +1,8 @@
 #pragma once
 #include "FormMain.h"
+#include "FormNewEquip.h"
+#include "FormRemoveItem.h"
+
 #include "Habilidade.h"
 #include "Equipamento.h"
 
@@ -32,7 +35,9 @@ namespace projetoBase{
 
 		DateTime open;	//o memento de criacao do form, usado para compor o numero aleatorio do dado
 		Form^ formMain;
-		PgSqlConnection^ pgc;
+	private: System::Windows::Forms::Button^  btn_equip_add;
+
+			 PgSqlConnection^ pgc;
 
 	//private:
 	//	FormFicha(void){
@@ -135,7 +140,8 @@ namespace projetoBase{
 		System::Windows::Forms::TextBox^  txt_habilidade;
 		System::Windows::Forms::Panel^  panel7;
 		System::Windows::Forms::TextBox^  txt_equipamentos;
-		System::Windows::Forms::Button^  btn_equip_add;
+private: System::Windows::Forms::Button^  btn_equip_remove;
+
 		System::Windows::Forms::Label^  label31;
 		System::Windows::Forms::Label^  label32;
 		System::Windows::Forms::Label^  label33;
@@ -219,8 +225,9 @@ namespace projetoBase{
 			this->txt_habilidade = (gcnew System::Windows::Forms::TextBox());
 			this->label29 = (gcnew System::Windows::Forms::Label());
 			this->panel7 = (gcnew System::Windows::Forms::Panel());
-			this->txt_equipamentos = (gcnew System::Windows::Forms::TextBox());
 			this->btn_equip_add = (gcnew System::Windows::Forms::Button());
+			this->txt_equipamentos = (gcnew System::Windows::Forms::TextBox());
+			this->btn_equip_remove = (gcnew System::Windows::Forms::Button());
 			this->label31 = (gcnew System::Windows::Forms::Label());
 			this->label32 = (gcnew System::Windows::Forms::Label());
 			this->label33 = (gcnew System::Windows::Forms::Label());
@@ -884,8 +891,9 @@ namespace projetoBase{
 			// 
 			// panel7
 			// 
-			this->panel7->Controls->Add(this->txt_equipamentos);
 			this->panel7->Controls->Add(this->btn_equip_add);
+			this->panel7->Controls->Add(this->txt_equipamentos);
+			this->panel7->Controls->Add(this->btn_equip_remove);
 			this->panel7->Controls->Add(this->label31);
 			this->panel7->Controls->Add(this->label32);
 			this->panel7->Controls->Add(this->label33);
@@ -894,6 +902,16 @@ namespace projetoBase{
 			this->panel7->Name = L"panel7";
 			this->panel7->Size = System::Drawing::Size(407, 204);
 			this->panel7->TabIndex = 83;
+			// 
+			// btn_equip_add
+			// 
+			this->btn_equip_add->Location = System::Drawing::Point(353, 0);
+			this->btn_equip_add->Name = L"btn_equip_add";
+			this->btn_equip_add->Size = System::Drawing::Size(24, 23);
+			this->btn_equip_add->TabIndex = 37;
+			this->btn_equip_add->Text = L"+";
+			this->btn_equip_add->UseVisualStyleBackColor = true;
+			this->btn_equip_add->Click += gcnew System::EventHandler(this, &FormFicha::btn_equip_add_Click);
 			// 
 			// txt_equipamentos
 			// 
@@ -908,14 +926,15 @@ namespace projetoBase{
 			this->txt_equipamentos->TabIndex = 36;
 			this->txt_equipamentos->WordWrap = false;
 			// 
-			// btn_equip_add
+			// btn_equip_remove
 			// 
-			this->btn_equip_add->Location = System::Drawing::Point(325, 0);
-			this->btn_equip_add->Name = L"btn_equip_add";
-			this->btn_equip_add->Size = System::Drawing::Size(33, 23);
-			this->btn_equip_add->TabIndex = 35;
-			this->btn_equip_add->Text = L"+/-";
-			this->btn_equip_add->UseVisualStyleBackColor = true;
+			this->btn_equip_remove->Location = System::Drawing::Point(383, 0);
+			this->btn_equip_remove->Name = L"btn_equip_remove";
+			this->btn_equip_remove->Size = System::Drawing::Size(24, 23);
+			this->btn_equip_remove->TabIndex = 35;
+			this->btn_equip_remove->Text = L"-";
+			this->btn_equip_remove->UseVisualStyleBackColor = true;
+			this->btn_equip_remove->Click += gcnew System::EventHandler(this, &FormFicha::btn_equip_remove_Click);
 			// 
 			// label31
 			// 
@@ -1173,6 +1192,16 @@ namespace projetoBase{
 			formMain->Show();
 		}
 
-};
+		System::Void btn_equip_add_Click(System::Object^  sender, System::EventArgs^  e){
+			FormNewEquip^ formNewEquip = gcnew FormNewEquip(pgc, id);
+			formNewEquip->ShowDialog();
+			loadEquipamentos(id);
+		}
+		System::Void btn_equip_remove_Click(System::Object^  sender, System::EventArgs^  e){
+			FormRemoveItem^ formRemoveItem = gcnew FormRemoveItem(pgc, id);
+			formRemoveItem->ShowDialog();
+			loadEquipamentos(id);
+		}
+	};
 }
 

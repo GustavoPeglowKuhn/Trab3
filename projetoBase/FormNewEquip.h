@@ -27,6 +27,9 @@ namespace projetoBase {
 			InitializeComponent();
 			id = _id;
 			pgc = _pgc;
+
+			loadEquipamentos();
+			loadItens();
 		}
 
 	protected:
@@ -155,20 +158,21 @@ namespace projetoBase {
 			// 
 			// btn_cancel
 			// 
-			this->btn_cancel->Location = System::Drawing::Point(111, 105);
+			this->btn_cancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
+			this->btn_cancel->Location = System::Drawing::Point(111, 104);
 			this->btn_cancel->Name = L"btn_cancel";
 			this->btn_cancel->Size = System::Drawing::Size(93, 23);
 			this->btn_cancel->TabIndex = 8;
-			this->btn_cancel->Text = L"Cancelar";
+			this->btn_cancel->Text = L"Voltar";
 			this->btn_cancel->UseVisualStyleBackColor = true;
 			// 
 			// btn_ok
 			// 
-			this->btn_ok->Location = System::Drawing::Point(12, 105);
+			this->btn_ok->Location = System::Drawing::Point(12, 104);
 			this->btn_ok->Name = L"btn_ok";
 			this->btn_ok->Size = System::Drawing::Size(93, 23);
 			this->btn_ok->TabIndex = 9;
-			this->btn_ok->Text = L"Confirmar";
+			this->btn_ok->Text = L"Adicionar";
 			this->btn_ok->UseVisualStyleBackColor = true;
 			this->btn_ok->Click += gcnew System::EventHandler(this, &FormNewEquip::btn_ok_Click);
 			// 
@@ -205,9 +209,11 @@ namespace projetoBase {
 		System::Void nud_quant_ValueChanged(System::Object^  sender, System::EventArgs^  e){
 			lbl_peso_total->Text = "" + itens[cb_item->SelectedIndex]->peso*(float)nud_quant->Value;
 		}
+
 		void loadEquipamentos(){
 			//ex://SELECT id, nome, peso FROM equipamento
 			try{
+				//lista dosequipamentos que o personagem ja possui
 				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, nome, peso, quantidade, n_usando "
 					"FROM equipamento, m_equip WHERE e_id = id AND p_id = " + id, pgc);
 				pgc->Open();
@@ -222,10 +228,14 @@ namespace projetoBase {
 						pgReader->GetInt32(4)					//n_usando
 					));
 				}
-
-				pgCommand = gcnew PgSqlCommand("SELECT id, nome, peso FROM equipamento", pgc);
+			} catch(Exception^){}
+		}
+		void loadItens(){
+			try{
+				//todos os itens
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, nome, peso FROM equipamento", pgc);
 				pgc->Open();
-				pgReader = pgCommand->ExecuteReader();
+				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
 				itens = gcnew List<Equipamento^>();
 				while(pgReader->Read()){
 					itens->Add(gcnew Equipamento(
@@ -242,7 +252,30 @@ namespace projetoBase {
 		}
 
 		System::Void btn_ok_Click(System::Object^  sender, System::EventArgs^  e){
+			try{
+				int itemId = itens[cb_item->SelectedIndex]->id;
+				bool contem = false;
+				int qual;
+				for(int i=0; i<equipamentos->Count && !contem; i++){
+					if(equipamentos[i]->id == itemId){
+						contem = true;
+						qual = i;
+					}
+				}
+				PgSqlCommand^ pgCommand;
+				if(contem)
+					pgCommand = gcnew PgSqlCommand("UPDATE m_equip SET quantidade = "
+						+(equipamentos[qual]->quantidade + (int)nud_quant->Value)
+						+" WHERE p_id = " + id + " AND e_id = " + itemId, pgc);
+				else
+					pgCommand = gcnew PgSqlCommand("INSERT INTO m_equip (p_id, e_id, quantidade, n_usando) VALUES (" 
+						+ id + ", " + itemId + ", "+ nud_quant->Value+", 0)", pgc);
+				pgc->Open();
+				pgCommand->ExecuteNonQuery();
+				//equipamentos = gcnew List<Equipamento^>();
+			} catch(Exception^){}
 
+			loadEquipamentos();
 		}
 	};
 }
