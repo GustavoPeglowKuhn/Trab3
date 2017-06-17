@@ -97,6 +97,8 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Equipamento.cpp" />
+    <ClCompile Include="FormNewEquip.cpp" />
+    <ClCompile Include="FormNovo.cpp" />
     <ClCompile Include="Habilidade.cpp" />
     <ClCompile Include="projetoBase.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -107,6 +109,12 @@
   <ItemGroup>
     <ClInclude Include="Equipamento.h" />
     <ClInclude Include="FormMain.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="FormNewEquip.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="FormNovo.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Habilidade.h" />
@@ -126,6 +134,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormFicha.resx">
       <DependentUpon>FormFicha.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNewEquip.resx">
+      <DependentUpon>FormNewEquip.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNovo.resx">
+      <DependentUpon>FormNovo.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

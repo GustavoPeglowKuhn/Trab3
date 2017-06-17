@@ -9,4 +9,3 @@ DROP TABLE "personagem";
 DROP TABLE "habilidade";
 DROP TABLE "raca";
 DROP TABLE "classe";
-

@@ -31,7 +31,6 @@ namespace projetoBase{
 		//!propriedades do personagem atual
 
 		DateTime open;	//o memento de criacao do form, usado para compor o numero aleatorio do dado
-		//FormMain^ formMain;
 		Form^ formMain;
 		PgSqlConnection^ pgc;
 
@@ -70,7 +69,8 @@ namespace projetoBase{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-
+		System::Windows::Forms::Panel^  panel5;
+		System::Windows::Forms::Label^  label29;
 		System::Windows::Forms::Label^  label1;
 		System::Windows::Forms::Label^  lbl_personagem;
 		System::Windows::Forms::Label^  lbl_raca;
@@ -128,15 +128,7 @@ namespace projetoBase{
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_export;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
 		System::Windows::Forms::Timer^  tmr_backup;
-		System::Windows::Forms::Panel^  panel5;
-		System::Windows::Forms::Label^  label26;
-		System::Windows::Forms::Label^  label25;
-		System::Windows::Forms::Label^  label24;
-		System::Windows::Forms::Label^  label23;
-		System::Windows::Forms::Button^  btn_ataque_add;
-		System::Windows::Forms::TextBox^  txt_ataque;
 		System::Windows::Forms::Label^  label30;
-		System::Windows::Forms::Label^  label29;
 		System::Windows::Forms::Label^  label28;
 		System::Windows::Forms::Label^  label27;
 		System::Windows::Forms::Panel^  panel6;
@@ -151,7 +143,6 @@ namespace projetoBase{
 		System::Windows::Forms::ToolStripButton^  btn_d6;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_save_as;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_load;
-
 		System::ComponentModel::IContainer^  components;
 
 #pragma region Windows Form Designer generated code
@@ -221,19 +212,12 @@ namespace projetoBase{
 			this->txt_defesa_bloqueio = (gcnew System::Windows::Forms::TextBox());
 			this->label22 = (gcnew System::Windows::Forms::Label());
 			this->tmr_backup = (gcnew System::Windows::Forms::Timer(this->components));
-			this->panel5 = (gcnew System::Windows::Forms::Panel());
-			this->txt_ataque = (gcnew System::Windows::Forms::TextBox());
-			this->btn_ataque_add = (gcnew System::Windows::Forms::Button());
-			this->label26 = (gcnew System::Windows::Forms::Label());
-			this->label25 = (gcnew System::Windows::Forms::Label());
-			this->label24 = (gcnew System::Windows::Forms::Label());
-			this->label23 = (gcnew System::Windows::Forms::Label());
 			this->label30 = (gcnew System::Windows::Forms::Label());
-			this->label29 = (gcnew System::Windows::Forms::Label());
 			this->label28 = (gcnew System::Windows::Forms::Label());
 			this->label27 = (gcnew System::Windows::Forms::Label());
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
 			this->txt_habilidade = (gcnew System::Windows::Forms::TextBox());
+			this->label29 = (gcnew System::Windows::Forms::Label());
 			this->panel7 = (gcnew System::Windows::Forms::Panel());
 			this->txt_equipamentos = (gcnew System::Windows::Forms::TextBox());
 			this->btn_equip_add = (gcnew System::Windows::Forms::Button());
@@ -241,15 +225,16 @@ namespace projetoBase{
 			this->label32 = (gcnew System::Windows::Forms::Label());
 			this->label33 = (gcnew System::Windows::Forms::Label());
 			this->label34 = (gcnew System::Windows::Forms::Label());
+			this->panel5 = (gcnew System::Windows::Forms::Panel());
 			this->pnl_desc->SuspendLayout();
 			this->toolStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->panel3->SuspendLayout();
 			this->panel4->SuspendLayout();
-			this->panel5->SuspendLayout();
 			this->panel6->SuspendLayout();
 			this->panel7->SuspendLayout();
+			this->panel5->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -414,7 +399,7 @@ namespace projetoBase{
 			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){ this->dd_file, this->btn_d6 });
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
-			this->toolStrip1->Size = System::Drawing::Size(787, 25);
+			this->toolStrip1->Size = System::Drawing::Size(838, 25);
 			this->toolStrip1->TabIndex = 7;
 			this->toolStrip1->Text = L"toolStrip1";
 			// 
@@ -515,7 +500,7 @@ namespace projetoBase{
 			this->panel1->Controls->Add(this->txt_mana);
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->txt_vida);
-			this->panel1->Location = System::Drawing::Point(5, 130);
+			this->panel1->Location = System::Drawing::Point(3, 7);
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(97, 84);
 			this->panel1->TabIndex = 16;
@@ -585,7 +570,7 @@ namespace projetoBase{
 			this->panel2->Controls->Add(this->label12);
 			this->panel2->Controls->Add(this->txt_forca);
 			this->panel2->Controls->Add(this->label11);
-			this->panel2->Location = System::Drawing::Point(108, 130);
+			this->panel2->Location = System::Drawing::Point(103, 1);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(95, 100);
 			this->panel2->TabIndex = 17;
@@ -675,7 +660,7 @@ namespace projetoBase{
 			this->panel3->Controls->Add(this->txt_carga_pesada);
 			this->panel3->Controls->Add(this->txt_carga_basica);
 			this->panel3->Controls->Add(this->label15);
-			this->panel3->Location = System::Drawing::Point(209, 130);
+			this->panel3->Location = System::Drawing::Point(204, 1);
 			this->panel3->Name = L"panel3";
 			this->panel3->Size = System::Drawing::Size(88, 100);
 			this->panel3->TabIndex = 18;
@@ -757,7 +742,7 @@ namespace projetoBase{
 			this->panel4->Controls->Add(this->txt_defesa_esquiva);
 			this->panel4->Controls->Add(this->txt_defesa_bloqueio);
 			this->panel4->Controls->Add(this->label22);
-			this->panel4->Location = System::Drawing::Point(303, 130);
+			this->panel4->Location = System::Drawing::Point(298, 1);
 			this->panel4->Name = L"panel4";
 			this->panel4->Size = System::Drawing::Size(113, 100);
 			this->panel4->TabIndex = 30;
@@ -834,78 +819,6 @@ namespace projetoBase{
 			// 
 			this->tmr_backup->Interval = 300000;
 			// 
-			// panel5
-			// 
-			this->panel5->Controls->Add(this->txt_ataque);
-			this->panel5->Controls->Add(this->btn_ataque_add);
-			this->panel5->Controls->Add(this->label26);
-			this->panel5->Controls->Add(this->label25);
-			this->panel5->Controls->Add(this->label24);
-			this->panel5->Controls->Add(this->label23);
-			this->panel5->Location = System::Drawing::Point(4, 237);
-			this->panel5->Name = L"panel5";
-			this->panel5->Size = System::Drawing::Size(411, 138);
-			this->panel5->TabIndex = 31;
-			// 
-			// txt_ataque
-			// 
-			this->txt_ataque->Location = System::Drawing::Point(0, 33);
-			this->txt_ataque->Multiline = true;
-			this->txt_ataque->Name = L"txt_ataque";
-			this->txt_ataque->ReadOnly = true;
-			this->txt_ataque->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->txt_ataque->Size = System::Drawing::Size(412, 105);
-			this->txt_ataque->TabIndex = 22;
-			this->txt_ataque->Text = L".";
-			this->txt_ataque->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// btn_ataque_add
-			// 
-			this->btn_ataque_add->Location = System::Drawing::Point(378, 0);
-			this->btn_ataque_add->Name = L"btn_ataque_add";
-			this->btn_ataque_add->Size = System::Drawing::Size(33, 23);
-			this->btn_ataque_add->TabIndex = 22;
-			this->btn_ataque_add->Text = L"+/-";
-			this->btn_ataque_add->UseVisualStyleBackColor = true;
-			// 
-			// label26
-			// 
-			this->label26->AutoSize = true;
-			this->label26->Location = System::Drawing::Point(304, 17);
-			this->label26->Name = L"label26";
-			this->label26->Size = System::Drawing::Size(31, 13);
-			this->label26->TabIndex = 34;
-			this->label26->Text = L"Tipo:";
-			// 
-			// label25
-			// 
-			this->label25->AutoSize = true;
-			this->label25->Location = System::Drawing::Point(74, 17);
-			this->label25->Name = L"label25";
-			this->label25->Size = System::Drawing::Size(34, 13);
-			this->label25->TabIndex = 33;
-			this->label25->Text = L"Arma:";
-			// 
-			// label24
-			// 
-			this->label24->AutoSize = true;
-			this->label24->Location = System::Drawing::Point(188, 17);
-			this->label24->Name = L"label24";
-			this->label24->Size = System::Drawing::Size(36, 13);
-			this->label24->TabIndex = 30;
-			this->label24->Text = L"Dano:";
-			// 
-			// label23
-			// 
-			this->label23->AutoSize = true;
-			this->label23->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label23->Location = System::Drawing::Point(183, 0);
-			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(57, 17);
-			this->label23->TabIndex = 30;
-			this->label23->Text = L"Ataque:";
-			// 
 			// label30
 			// 
 			this->label30->AutoSize = true;
@@ -916,15 +829,6 @@ namespace projetoBase{
 			this->label30->Size = System::Drawing::Size(86, 17);
 			this->label30->TabIndex = 30;
 			this->label30->Text = L"Habilidades:";
-			// 
-			// label29
-			// 
-			this->label29->AutoSize = true;
-			this->label29->Location = System::Drawing::Point(163, 27);
-			this->label29->Name = L"label29";
-			this->label29->Size = System::Drawing::Size(31, 13);
-			this->label29->TabIndex = 30;
-			this->label29->Text = L"Tipo:";
 			// 
 			// label28
 			// 
@@ -938,7 +842,7 @@ namespace projetoBase{
 			// label27
 			// 
 			this->label27->AutoSize = true;
-			this->label27->Location = System::Drawing::Point(301, 27);
+			this->label27->Location = System::Drawing::Point(246, 27);
 			this->label27->Name = L"label27";
 			this->label27->Size = System::Drawing::Size(40, 13);
 			this->label27->TabIndex = 34;
@@ -951,21 +855,32 @@ namespace projetoBase{
 			this->panel6->Controls->Add(this->label28);
 			this->panel6->Controls->Add(this->label29);
 			this->panel6->Controls->Add(this->label30);
-			this->panel6->Location = System::Drawing::Point(422, 28);
+			this->panel6->Location = System::Drawing::Point(4, 238);
 			this->panel6->Name = L"panel6";
-			this->panel6->Size = System::Drawing::Size(358, 170);
+			this->panel6->Size = System::Drawing::Size(825, 214);
 			this->panel6->TabIndex = 47;
 			// 
 			// txt_habilidade
 			// 
+			this->txt_habilidade->Font = (gcnew System::Drawing::Font(L"Consolas", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->txt_habilidade->Location = System::Drawing::Point(0, 43);
 			this->txt_habilidade->Multiline = true;
 			this->txt_habilidade->Name = L"txt_habilidade";
 			this->txt_habilidade->ReadOnly = true;
-			this->txt_habilidade->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->txt_habilidade->Size = System::Drawing::Size(358, 127);
+			this->txt_habilidade->ScrollBars = System::Windows::Forms::ScrollBars::Both;
+			this->txt_habilidade->Size = System::Drawing::Size(819, 168);
 			this->txt_habilidade->TabIndex = 35;
-			this->txt_habilidade->Text = L".";
+			this->txt_habilidade->WordWrap = false;
+			// 
+			// label29
+			// 
+			this->label29->AutoSize = true;
+			this->label29->Location = System::Drawing::Point(184, 27);
+			this->label29->Name = L"label29";
+			this->label29->Size = System::Drawing::Size(31, 13);
+			this->label29->TabIndex = 30;
+			this->label29->Text = L"Tipo:";
 			// 
 			// panel7
 			// 
@@ -975,21 +890,23 @@ namespace projetoBase{
 			this->panel7->Controls->Add(this->label32);
 			this->panel7->Controls->Add(this->label33);
 			this->panel7->Controls->Add(this->label34);
-			this->panel7->Location = System::Drawing::Point(422, 205);
+			this->panel7->Location = System::Drawing::Point(422, 28);
 			this->panel7->Name = L"panel7";
-			this->panel7->Size = System::Drawing::Size(358, 170);
+			this->panel7->Size = System::Drawing::Size(407, 204);
 			this->panel7->TabIndex = 83;
 			// 
 			// txt_equipamentos
 			// 
+			this->txt_equipamentos->Font = (gcnew System::Drawing::Font(L"Consolas", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->txt_equipamentos->Location = System::Drawing::Point(0, 43);
 			this->txt_equipamentos->Multiline = true;
 			this->txt_equipamentos->Name = L"txt_equipamentos";
 			this->txt_equipamentos->ReadOnly = true;
 			this->txt_equipamentos->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->txt_equipamentos->Size = System::Drawing::Size(358, 127);
+			this->txt_equipamentos->Size = System::Drawing::Size(407, 161);
 			this->txt_equipamentos->TabIndex = 36;
-			this->txt_equipamentos->Text = L".";
+			this->txt_equipamentos->WordWrap = false;
 			// 
 			// btn_equip_add
 			// 
@@ -1003,16 +920,16 @@ namespace projetoBase{
 			// label31
 			// 
 			this->label31->AutoSize = true;
-			this->label31->Location = System::Drawing::Point(301, 26);
+			this->label31->Location = System::Drawing::Point(274, 26);
 			this->label31->Name = L"label31";
-			this->label31->Size = System::Drawing::Size(37, 13);
+			this->label31->Size = System::Drawing::Size(55, 13);
 			this->label31->TabIndex = 34;
-			this->label31->Text = L"Custo:";
+			this->label31->Text = L"Unidades:";
 			// 
 			// label32
 			// 
 			this->label32->AutoSize = true;
-			this->label32->Location = System::Drawing::Point(123, 26);
+			this->label32->Location = System::Drawing::Point(9, 26);
 			this->label32->Name = L"label32";
 			this->label32->Size = System::Drawing::Size(30, 13);
 			this->label32->TabIndex = 33;
@@ -1021,11 +938,11 @@ namespace projetoBase{
 			// label33
 			// 
 			this->label33->AutoSize = true;
-			this->label33->Location = System::Drawing::Point(265, 26);
+			this->label33->Location = System::Drawing::Point(344, 26);
 			this->label33->Name = L"label33";
-			this->label33->Size = System::Drawing::Size(34, 13);
+			this->label33->Size = System::Drawing::Size(57, 13);
 			this->label33->TabIndex = 30;
-			this->label33->Text = L"Peso:";
+			this->label33->Text = L"Peso total:";
 			// 
 			// label34
 			// 
@@ -1038,20 +955,27 @@ namespace projetoBase{
 			this->label34->TabIndex = 30;
 			this->label34->Text = L"Equipamentos:";
 			// 
+			// panel5
+			// 
+			this->panel5->Controls->Add(this->panel1);
+			this->panel5->Controls->Add(this->panel2);
+			this->panel5->Controls->Add(this->panel3);
+			this->panel5->Controls->Add(this->panel4);
+			this->panel5->Location = System::Drawing::Point(5, 130);
+			this->panel5->Name = L"panel5";
+			this->panel5->Size = System::Drawing::Size(411, 102);
+			this->panel5->TabIndex = 84;
+			// 
 			// FormFicha
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-			this->ClientSize = System::Drawing::Size(787, 382);
+			this->ClientSize = System::Drawing::Size(838, 586);
+			this->Controls->Add(this->panel5);
 			this->Controls->Add(this->panel7);
 			this->Controls->Add(this->panel6);
-			this->Controls->Add(this->panel5);
-			this->Controls->Add(this->panel4);
-			this->Controls->Add(this->panel3);
-			this->Controls->Add(this->panel2);
-			this->Controls->Add(this->panel1);
 			this->Controls->Add(this->toolStrip1);
 			this->Controls->Add(this->pnl_desc);
 			this->MaximizeBox = false;
@@ -1070,12 +994,11 @@ namespace projetoBase{
 			this->panel3->PerformLayout();
 			this->panel4->ResumeLayout(false);
 			this->panel4->PerformLayout();
-			this->panel5->ResumeLayout(false);
-			this->panel5->PerformLayout();
 			this->panel6->ResumeLayout(false);
 			this->panel6->PerformLayout();
 			this->panel7->ResumeLayout(false);
 			this->panel7->PerformLayout();
+			this->panel5->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -1199,11 +1122,7 @@ namespace projetoBase{
 					));
 				}
 				txt_habilidade->Clear();
-				for each(Habilidade^ h in habilidades){
-					txt_habilidade->AppendText(h->nome);	//limitar o numero de caracteres para o nome
-					//adicionar o tipo e o bonus
-					txt_habilidade->AppendText("\r\n");
-				}
+				for each(Habilidade^ h in habilidades) txt_habilidade->AppendText(formatedHabilidade(h));
 			} catch(Exception^){}
 		}
 		void loadEquipamentos(int _id){
@@ -1225,19 +1144,35 @@ namespace projetoBase{
 				}
 				txt_equipamentos->Clear();
 				for each(Equipamento^ e in equipamentos){
-					txt_equipamentos->AppendText(e->nome);	//limitar o numero de caracteres para o nome
-					//adicionar o resto
-					txt_equipamentos->AppendText("\r\n");
+					txt_equipamentos->AppendText(formatedEquipamento(e));
 				}
 			}catch(Exception^){}
+		}
+
+		String^ formatedHabilidade(Habilidade^ h){
+			String^ res = h->nome;
+			if(res->Length > 30) res = res->Remove(26) + "... ";
+			else res = res->PadRight(30);
+			res += (h->tipo == acao ? "Ação       " : (h->tipo == reacao ? "Reação     " : "Suporte    "));
+			res += h->bonus + "\r\n";
+			return res;
+		}
+		String^ formatedEquipamento(Equipamento^ e){
+			String^ res = e->nome;
+			if(res->Length > 46) res = res->Remove(32) + "... ";
+			else res = res->PadRight(46);
+			res += ""+e->quantidade;
+			res = res->PadRight(57) + e->peso*e->quantidade + "\r\n";
+			return res;
 		}
 
 		int rand6(){
 			return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6;
 		}
 		System::Void FormFicha_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e){
-			//formMain->Show();
+			formMain->Show();
 		}
-	};
+
+};
 }
 

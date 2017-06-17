@@ -19,11 +19,7 @@ namespace projetoBase{
 	public ref class FormMain : public System::Windows::Forms::Form{
 	private:
 		int id;
-	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::Label^  lbl_raca;
-	private: System::Windows::Forms::Label^  label4;
-			 FormFicha^ formFicha;
+		FormFicha^ formFicha;
 		//Form^ formNew;
 
 	public:
@@ -48,9 +44,12 @@ namespace projetoBase{
 			}
 		}
 
-	public:
-		Devart::Data::PostgreSql::PgSqlConnection^  pgSqlConnection1;
 	private:
+		Devart::Data::PostgreSql::PgSqlConnection^  pgSqlConnection1;
+		System::Windows::Forms::Label^  label1;
+		System::Windows::Forms::Label^  label2;
+		System::Windows::Forms::Label^  lbl_raca;
+		System::Windows::Forms::Label^  label4;
 		System::Windows::Forms::ComboBox^  cb_jogador;
 		System::Windows::Forms::ComboBox^  cb_personagem;
 		System::Windows::Forms::Label^  lbl1;
@@ -298,9 +297,9 @@ namespace projetoBase{
 	public:			//O formulario da ficha pode chamar o formulario de novo formulario e vice versa
 		void ShowFormFicha(int personagemId){
 			this->formFicha = gcnew FormFicha(this, pgSqlConnection1, id);
-			this->formFicha->ShowDialog();
-			//this->formFicha->Show();
-			//this->Hide();
+			//this->formFicha->ShowDialog();
+			this->formFicha->Show();
+			this->Hide();
 		}
 
 		void ShowFormNovo(){

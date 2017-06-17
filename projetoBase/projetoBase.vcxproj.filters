@@ -36,6 +36,12 @@
     <ClCompile Include="Equipamento.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FormNovo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FormNewEquip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -54,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Equipamento.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FormNovo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FormNewEquip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
