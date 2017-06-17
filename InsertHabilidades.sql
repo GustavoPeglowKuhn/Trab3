@@ -42,3 +42,10 @@ INSERT INTO cla_habilidades(c_id, h_id) VALUES ((SELECT classe.id FROM classe WH
 INSERT INTO cla_habilidades(c_id, h_id) VALUES ((SELECT classe.id FROM classe WHERE classe.nome = 'Druida'),     (SELECT habilidade.id FROM habilidade WHERE habilidade.nome = 'Sabedoria Selvagem'));
 INSERT INTO cla_habilidades(c_id, h_id) VALUES ((SELECT classe.id FROM classe WHERE classe.nome = 'Espadachim'), (SELECT habilidade.id FROM habilidade WHERE habilidade.nome = 'Acrobata')          );
 INSERT INTO cla_habilidades(c_id, h_id) VALUES ((SELECT classe.id FROM classe WHERE classe.nome = 'Espadachim'), (SELECT habilidade.id FROM habilidade WHERE habilidade.nome = 'Combate Tático')    );
+
+
+--adiciona habilidades ao personagem 1 para testes
+--INSERT INTO m_hab(p_id, h_id) VALUES (1, 3);
+--INSERT INTO m_hab(p_id, h_id) VALUES (1, 8);
+--INSERT INTO m_hab(p_id, h_id) VALUES (1, 9);
+--INSERT INTO m_hab(p_id, h_id) VALUES (1, 15);

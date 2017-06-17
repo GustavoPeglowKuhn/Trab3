@@ -1,0 +1,34 @@
+  projetoBase.FormMain.resources - Embedded, ContainedInManifestFile, 
+  projetoBase.FormFicha.resources - Embedded, ContainedInManifestFile, 
+ImageRuntimeVersion: v4.0.30319
+Assembly projetoBase, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly Devart.Data, Version=5.0.1654.0, Culture=neutral, PublicKeyToken=09af7300eec23701: 
+	hash=None, flags=None
+Assembly Devart.Data.PostgreSql, Version=7.8.862.0, Culture=neutral, PublicKeyToken=09af7300eec23701: 
+	hash=None, flags=None
+Assembly System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly System.Transactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Class projetoBase.FormFicha: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(System.Windows.Forms.Form, Devart.Data.PostgreSql.PgSqlConnection, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class projetoBase.FormMain: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    Devart.Data.PostgreSql.PgSqlConnection pgSqlConnection1 : Public
+  Methods:
+    ShowFormFicha(Int32): PrivateScope, Public, HideBySig
+    ShowFormNovo(): PrivateScope, Public, HideBySig

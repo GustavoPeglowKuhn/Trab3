@@ -1,0 +1,31 @@
+INSERT INTO equipamento (nome, peso) VALUES ('Adaga', 0.25);
+INSERT INTO equipamento (nome, peso) VALUES ('Bordão', 2);
+INSERT INTO equipamento (nome, peso) VALUES ('Espada Curta', 1);
+INSERT INTO equipamento (nome, peso) VALUES ('Espada Longa', 2);
+INSERT INTO equipamento (nome, peso) VALUES ('Machado de Batalha', 3);
+INSERT INTO equipamento (nome, peso) VALUES ('Arco', 1.5);
+INSERT INTO equipamento (nome, peso) VALUES ('flexa', 0.05);
+INSERT INTO equipamento (nome, peso) VALUES ('Besta', 3);
+INSERT INTO equipamento (nome, peso) VALUES ('virote', 0.04);
+INSERT INTO equipamento (nome, peso) VALUES ('Plumbata', 0.05);
+INSERT INTO equipamento (nome, peso) VALUES ('Armadura de Couro', 12);
+INSERT INTO equipamento (nome, peso) VALUES ('Armadura de Batalha', 27);
+INSERT INTO equipamento (nome, peso) VALUES ('Escudo medio', 6);
+INSERT INTO equipamento (nome, peso) VALUES ('Escudo de Corpo', 9);
+INSERT INTO equipamento (nome, peso) VALUES ('Cajado', 2);
+INSERT INTO equipamento (nome, peso) VALUES ('Varinha', 0.15);
+INSERT INTO equipamento (nome, peso) VALUES ('Simbolo Sagrado', 0.1);
+INSERT INTO equipamento (nome, peso) VALUES ('Poção Antidoto', 0.12);
+INSERT INTO equipamento (nome, peso) VALUES ('Poção da Explosão', 0.12);
+INSERT INTO equipamento (nome, peso) VALUES ('Poção da Restauração', 0.12);
+INSERT INTO equipamento (nome, peso) VALUES ('Poção de Mana', 0.12);
+INSERT INTO equipamento (nome, peso) VALUES ('Poção de Vida', 0.12);
+
+--adiciona equipamentos ao personagem 1 para testes
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 1, 1, 0);
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 6, 1, 1);
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 7, 23, 23);
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 3, 1, 0);
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 13, 1, 0);
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 11, 1, 1);
+--INSERT INTO m_equip(p_id, e_id, quantidade, n_usando) VALUES (1, 22, 3, 0);

@@ -1,6 +1,9 @@
 #pragma once
+#include "FormMain.h"
+#include "Habilidade.h"
+#include "Equipamento.h"
 
-namespace projetoBase {
+namespace projetoBase{
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -15,7 +18,7 @@ namespace projetoBase {
 	/// <summary>
 	/// Summary for Form1
 	/// </summary>
-	public ref class Form1 : public System::Windows::Forms::Form{
+	public ref class FormFicha : public System::Windows::Forms::Form{
 	private:
 		//propriedades do personagem atual
 		int id, raca, classe;
@@ -23,29 +26,42 @@ namespace projetoBase {
 		int forca, agilidade, inteligencia, vontade;
 		int bloqueio, esquiva, determinacao;
 		int basica, pesada, maxima;
+		List<Habilidade^>^ habilidades;
+		List<Equipamento^>^ equipamentos;
 		//!propriedades do personagem atual
 
 		DateTime open;	//o memento de criacao do form, usado para compor o numero aleatorio do dado
+		//FormMain^ formMain;
+		Form^ formMain;
+		PgSqlConnection^ pgc;
 
+	//private:
+	//	FormFicha(void){
+	//		InitializeComponent();
+	//		//
+	//		//TODO: Add the constructor code here
+	//		//
+	//
+	//		open = DateTime::Now;
+	//	}
 	public:
-		Form1(void)
-		{
+		FormFicha(Form^ _formMain, PgSqlConnection^ _pgc, int _id){
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
-
 			open = DateTime::Now;
+			formMain = _formMain;
+			pgc = _pgc;
+			id = _id;
+			loadPersonagem(id);
+			loadHabilidades(id);
+			loadEquipamentos(id);
 		}
 
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~Form1()
-		{
-			if (components)
-			{
+		~FormFicha(){
+			if(components){
 				delete components;
 			}
 		}
@@ -75,10 +91,8 @@ namespace projetoBase {
 		System::Windows::Forms::TextBox^  txt_vida;
 		System::Windows::Forms::Label^  label3;
 		System::Windows::Forms::Panel^  panel1;
-	private: System::Windows::Forms::Label^  lbl_mana_max;
-
-	private: System::Windows::Forms::Label^  lbl_vida_max;
-
+		System::Windows::Forms::Label^  lbl_mana_max;
+		System::Windows::Forms::Label^  lbl_vida_max;
 		System::Windows::Forms::Button^  button2;
 		System::Windows::Forms::Button^  button1;
 		System::Windows::Forms::Label^  label9;
@@ -137,7 +151,7 @@ namespace projetoBase {
 		System::Windows::Forms::ToolStripButton^  btn_d6;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_save_as;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_load;
-		Devart::Data::PostgreSql::PgSqlConnection^  pgSqlConnection1;
+
 		System::ComponentModel::IContainer^  components;
 
 #pragma region Windows Form Designer generated code
@@ -227,7 +241,6 @@ namespace projetoBase {
 			this->label32 = (gcnew System::Windows::Forms::Label());
 			this->label33 = (gcnew System::Windows::Forms::Label());
 			this->label34 = (gcnew System::Windows::Forms::Label());
-			this->pgSqlConnection1 = (gcnew Devart::Data::PostgreSql::PgSqlConnection());
 			this->pnl_desc->SuspendLayout();
 			this->toolStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
@@ -430,6 +443,7 @@ namespace projetoBase {
 			this->dd_file_new->Name = L"dd_file_new";
 			this->dd_file_new->Size = System::Drawing::Size(150, 22);
 			this->dd_file_new->Text = L"Novo";
+			this->dd_file_new->Click += gcnew System::EventHandler(this, &FormFicha::dd_file_new_Click);
 			// 
 			// dd_file_save
 			// 
@@ -450,7 +464,7 @@ namespace projetoBase {
 			this->dd_file_load->Name = L"dd_file_load";
 			this->dd_file_load->Size = System::Drawing::Size(150, 22);
 			this->dd_file_load->Text = L"Carregar";
-			this->dd_file_load->Click += gcnew System::EventHandler(this, &Form1::load_click);
+			this->dd_file_load->Click += gcnew System::EventHandler(this, &FormFicha::load_click);
 			// 
 			// dd_file_export
 			// 
@@ -906,16 +920,16 @@ namespace projetoBase {
 			// label29
 			// 
 			this->label29->AutoSize = true;
-			this->label29->Location = System::Drawing::Point(265, 27);
+			this->label29->Location = System::Drawing::Point(163, 27);
 			this->label29->Name = L"label29";
-			this->label29->Size = System::Drawing::Size(23, 13);
+			this->label29->Size = System::Drawing::Size(31, 13);
 			this->label29->TabIndex = 30;
-			this->label29->Text = L"Dif:";
+			this->label29->Text = L"Tipo:";
 			// 
 			// label28
 			// 
 			this->label28->AutoSize = true;
-			this->label28->Location = System::Drawing::Point(123, 26);
+			this->label28->Location = System::Drawing::Point(3, 27);
 			this->label28->Name = L"label28";
 			this->label28->Size = System::Drawing::Size(38, 13);
 			this->label28->TabIndex = 33;
@@ -926,9 +940,9 @@ namespace projetoBase {
 			this->label27->AutoSize = true;
 			this->label27->Location = System::Drawing::Point(301, 27);
 			this->label27->Name = L"label27";
-			this->label27->Size = System::Drawing::Size(37, 13);
+			this->label27->Size = System::Drawing::Size(40, 13);
 			this->label27->TabIndex = 34;
-			this->label27->Text = L"Mana:";
+			this->label27->Text = L"Bonus:";
 			// 
 			// panel6
 			// 
@@ -952,7 +966,6 @@ namespace projetoBase {
 			this->txt_habilidade->Size = System::Drawing::Size(358, 127);
 			this->txt_habilidade->TabIndex = 35;
 			this->txt_habilidade->Text = L".";
-			this->txt_habilidade->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel7
 			// 
@@ -977,7 +990,6 @@ namespace projetoBase {
 			this->txt_equipamentos->Size = System::Drawing::Size(358, 127);
 			this->txt_equipamentos->TabIndex = 36;
 			this->txt_equipamentos->Text = L".";
-			this->txt_equipamentos->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// btn_equip_add
 			// 
@@ -1026,12 +1038,7 @@ namespace projetoBase {
 			this->label34->TabIndex = 30;
 			this->label34->Text = L"Equipamentos:";
 			// 
-			// pgSqlConnection1
-			// 
-			this->pgSqlConnection1->CommitTimeout = 0;
-			this->pgSqlConnection1->Name = L"pgSqlConnection1";
-			// 
-			// Form1
+			// FormFicha
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
@@ -1048,8 +1055,9 @@ namespace projetoBase {
 			this->Controls->Add(this->toolStrip1);
 			this->Controls->Add(this->pnl_desc);
 			this->MaximizeBox = false;
-			this->Name = L"Form1";
+			this->Name = L"FormFicha";
 			this->Text = L"Form1";
+			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &FormFicha::FormFicha_FormClosed);
 			this->pnl_desc->ResumeLayout(false);
 			this->pnl_desc->PerformLayout();
 			this->toolStrip1->ResumeLayout(false);
@@ -1074,84 +1082,99 @@ namespace projetoBase {
 		}
 #pragma endregion
 
+		private: System::Void dd_file_new_Click(System::Object^  sender, System::EventArgs^  e){
+			//((projetoBase::FormMain^)formMain)->ShowFormNovo();
+			this->Close();
+		}
 		System::Void load_click(System::Object^  sender, System::EventArgs^  e){
-			//Abre uma janela para perguntar o nome do personagem
-			//loadPersonagem(idDoPersonagem)
+			this->Close();
 		}
 
-		//tem que testar
+//ex://SELECT personagem.id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, raca.nome, classe.nome, raca.atributos[1]+classe.atributos[1]+personagem.atributos[1] AS forca, raca.atributos[2]+classe.atributos[2]+personagem.atributos[2] AS agilidade, raca.atributos[3]+classe.atributos[3]+personagem.atributos[3] AS inteligencia, raca.atributos[4]+classe.atributos[4]+personagem.atributos[4] AS vontade, defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] FROM personagem, raca, classe WHERE personagem.id = 1 AND raca.id = personagem.raca AND classe.id = personagem.classe
 		void loadPersonagem(int _id){	//id do personagem
 			//PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, "+
 			//"raca, classe, atributos, defesa, carga  FROM personagem WHERE id = " + id, pgSqlConnection1);
-			PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, "+
-			//													 0		1			2		3			4			5		6		7		8		9
-				"raca, classe, atributos[1], atributos[2], atributos[3], atributos[4], defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3]  FROM personagem WHERE id = "+_id, pgSqlConnection1);
-			//		10		11		12			13			14				15			16			17			18			19		20			21
-			
-			pgSqlConnection1->Open();
+			//PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, " +
+			//	//													 0		1			2		3			4			5		6		7		8		9
+			//	"raca, classe, atributos[1], atributos[2], atributos[3], atributos[4], defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] " +
+			//	//	10		11		12			13			14				15			16			17			18			19		20			21
+			//	" FROM personagem WHERE id = " , pgc);//formMain->pgSqlConnection1);
+			//formMain->pgSqlConnection1->Open();
+			PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT personagem.id, personagem, jogador, motivacao, "+
+				"experiencia, nivel, mana_max, mana, vida_max, vida, "+
+				"raca.nome, classe.nome, "+
+				"raca.atributos[1] + classe.atributos[1] + personagem.atributos[1], "+
+				"raca.atributos[2] + classe.atributos[2] + personagem.atributos[2], "+
+				"raca.atributos[3] + classe.atributos[3] + personagem.atributos[3], "+
+				"raca.atributos[4] + classe.atributos[4] + personagem.atributos[4], "+
+				"defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] FROM personagem, raca, classe WHERE "+
+				"raca.id = personagem.raca AND classe.id = personagem.classe AND personagem.id = "+ _id, pgc);
+			pgc->Open();
 			PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
 			try{
 				//while(pgReader->Read()){
 				if(pgReader->Read()){	//vai ler só uma linha, a do personagem atual
-					id =				Int32::Parse(pgReader->GetString(0));
-					
+										//id =				Int32::Parse(pgReader->GetString(0));	//eu to recebendo o id na chamada da funcao, nao tem porque ler o id aqui
+
 					lbl_personagem->Text = pgReader->GetString(1);
 					lbl_jogador->Text = pgReader->GetString(2);
 					lbl_motivacao->Text = pgReader->GetString(3);
-					
-					experiencia			= Int32::Parse(pgReader->GetString(4));
-					nivel				= Int32::Parse(pgReader->GetString(5));
-					mana_max			= Int32::Parse(pgReader->GetString(6));
-					mana				= Int32::Parse(pgReader->GetString(7));
-					vida_max			= Int32::Parse(pgReader->GetString(8));
-					vida				= Int32::Parse(pgReader->GetString(9));
 
-					raca =				Int32::Parse(pgReader->GetString(10));
-					classe =			Int32::Parse(pgReader->GetString(11));
+					experiencia	= pgReader->GetInt32(4);//= Int32::Parse(pgReader->GetString(4));
+					nivel		= pgReader->GetInt32(5);//= Int32::Parse(pgReader->GetString(5));
+					mana_max	= pgReader->GetInt32(6);//= Int32::Parse(pgReader->GetString(6));
+					mana		= pgReader->GetInt32(7);//= Int32::Parse(pgReader->GetString(7));
+					vida_max	= pgReader->GetInt32(8);//= Int32::Parse(pgReader->GetString(8));
+					vida		= pgReader->GetInt32(9);//= Int32::Parse(pgReader->GetString(9));
 
-					forca =				Int32::Parse(pgReader->GetString(12));
-					agilidade =			Int32::Parse(pgReader->GetString(13));
-					inteligencia =		Int32::Parse(pgReader->GetString(14));
-					vontade =			Int32::Parse(pgReader->GetString(15));
+					//raca	= pgReader->GetInt32(10);//= Int32::Parse(pgReader->GetString(10));
+					//classe	= pgReader->GetInt32(11);//= Int32::Parse(pgReader->GetString(11));
+					lbl_raca->Text		= pgReader->GetString(10);
+					lbl_classe->Text	= pgReader->GetString(11);
 
-					bloqueio =			Int32::Parse(pgReader->GetString(16));
-					esquiva =			Int32::Parse(pgReader->GetString(17));
-					determinacao =		Int32::Parse(pgReader->GetString(18));
-					basica =			Int32::Parse(pgReader->GetString(19));
-					pesada =			Int32::Parse(pgReader->GetString(20));
-					maxima =			Int32::Parse(pgReader->GetString(21));
+					forca			= pgReader->GetInt32(12);//= Int32::Parse(pgReader->GetString(12));
+					agilidade		= pgReader->GetInt32(13);//= Int32::Parse(pgReader->GetString(13));
+					inteligencia	= pgReader->GetInt32(14);//= Int32::Parse(pgReader->GetString(14));
+					vontade			= pgReader->GetInt32(15);//= Int32::Parse(pgReader->GetString(15));
+
+					bloqueio		= pgReader->GetInt32(16);//= Int32::Parse(pgReader->GetString(16));
+					esquiva			= pgReader->GetInt32(17);//= Int32::Parse(pgReader->GetString(17));
+					determinacao	= pgReader->GetInt32(18);//= Int32::Parse(pgReader->GetString(18));
+					basica			= pgReader->GetInt32(19);//= Int32::Parse(pgReader->GetString(19));
+					pesada			= pgReader->GetInt32(20);//= Int32::Parse(pgReader->GetString(20));
+					maxima			= pgReader->GetInt32(21);//= Int32::Parse(pgReader->GetString(21));
 
 					lbl_experiencia->Text	= "" + experiencia;
 					lbl_nivel->Text			= "" + nivel;
 
-					lbl_mana_max->Text		= "" + mana_max;
-					txt_mana->Text			= "" + mana;
-					lbl_vida_max->Text		= "" + vida_max;
-					txt_vida->Text			= "" + vida;
+					lbl_mana_max->Text	= "" + mana_max;
+					txt_mana->Text		= "" + mana;
+					lbl_vida_max->Text	= "" + vida_max;
+					txt_vida->Text		= "" + vida;
 
-					txt_forca->Text =			"" + forca;
-					txt_agilidade->Text =		"" + agilidade;
-					txt_inteligencia->Text =	"" + inteligencia;
-					txt_vontade->Text =			"" + vontade;
-					
-					txt_defesa_bloqueio->Text = "" + bloqueio;
-					txt_defesa_esquiva->Text = "" + esquiva;
-					txt_defesa_determinacao->Text = "" + determinacao;
+					txt_forca->Text			= "" + forca;
+					txt_agilidade->Text		= "" + agilidade;
+					txt_inteligencia->Text	= "" + inteligencia;
+					txt_vontade->Text		= "" + vontade;
 
-					txt_carga_basica->Text = ""+ basica;
-					txt_carga_pesada->Text = ""+ pesada;
-					txt_carga_maxima->Text = ""+ maxima;
+					txt_defesa_bloqueio->Text		= "" + bloqueio;
+					txt_defesa_esquiva->Text		= "" + esquiva;
+					txt_defesa_determinacao->Text	= "" + determinacao;
 
-					//le a raça e a classe pelos id de cada tabela armazenados na tabela personagem
-					PgSqlCommand^ pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM raca WHERE id = " + raca, pgSqlConnection1);
-					PgSqlDataReader^ pgReader2 = pgCommand2->ExecuteReader();
-					pgReader2->Read();
-					lbl_raca->Text = pgReader2->GetString(0);
+					txt_carga_basica->Text = "" + basica;
+					txt_carga_pesada->Text = "" + pesada;
+					txt_carga_maxima->Text = "" + maxima;
 
-					pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM classe WHERE id = " + classe, pgSqlConnection1);
-					pgReader2 = pgCommand2->ExecuteReader();
-					pgReader2->Read();
-					lbl_classe->Text = pgReader2->GetString(0);
+					////le a raça e a classe pelos id de cada tabela armazenados na tabela personagem
+					//PgSqlCommand^ pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM raca WHERE id = " + raca, pgc);// pgSqlConnection1);
+					//PgSqlDataReader^ pgReader2 = pgCommand2->ExecuteReader();
+					//pgReader2->Read();
+					//lbl_raca->Text = pgReader2->GetString(0);
+					//
+					//pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM classe WHERE id = " + classe, pgc);// pgSqlConnection1);
+					//pgReader2 = pgCommand2->ExecuteReader();
+					//pgReader2->Read();
+					//lbl_classe->Text = pgReader2->GetString(0);
 				}
 			} finally {
 				//pgReader->Close();
@@ -1159,8 +1182,61 @@ namespace projetoBase {
 			}
 		}
 
+		void loadHabilidades(int _id){
+			//ex://SELECT habilidade.id, nome, tipo, req_nivel, bonus FROM habilidade, m_hab WHERE h_id = id AND p_id = 1
+			try{
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT habilidade.id, tipo, nome, bonus "
+					"FROM habilidade, m_hab WHERE h_id = id AND p_id = " + _id, pgc);
+				pgc->Open();
+				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				habilidades = gcnew List<Habilidade^>();
+				while(pgReader->Read()){
+					habilidades->Add(gcnew Habilidade(
+						pgReader->GetInt32(0),					//id
+						(habilidadeTipo)pgReader->GetInt32(1),	//tipo
+						pgReader->GetString(2),					//nome
+						pgReader->GetString(3)					//bonus
+					));
+				}
+				txt_habilidade->Clear();
+				for each(Habilidade^ h in habilidades){
+					txt_habilidade->AppendText(h->nome);	//limitar o numero de caracteres para o nome
+					//adicionar o tipo e o bonus
+					txt_habilidade->AppendText("\r\n");
+				}
+			} catch(Exception^){}
+		}
+		void loadEquipamentos(int _id){
+			//ex://SELECT id, nome, peso, quantidade, n_usando FROM equipamento, m_equip WHERE e_id = id AND p_id = 1
+			try{
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, nome, peso, quantidade, n_usando "
+					"FROM equipamento, m_equip WHERE e_id = id AND p_id = " + _id, pgc);
+				pgc->Open();
+				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				equipamentos = gcnew List<Equipamento^>();
+				while(pgReader->Read()){
+					equipamentos->Add(gcnew Equipamento(
+						pgReader->GetInt32(0),					//id
+						pgReader->GetString(1),					//nome
+						pgReader->GetFloat(2),					//peso
+						pgReader->GetInt32(3),					//quantidade
+						pgReader->GetInt32(4)					//n_usando
+					));
+				}
+				txt_equipamentos->Clear();
+				for each(Equipamento^ e in equipamentos){
+					txt_equipamentos->AppendText(e->nome);	//limitar o numero de caracteres para o nome
+					//adicionar o resto
+					txt_equipamentos->AppendText("\r\n");
+				}
+			}catch(Exception^){}
+		}
+
 		int rand6(){
 			return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6;
+		}
+		System::Void FormFicha_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e){
+			//formMain->Show();
 		}
 	};
 }
