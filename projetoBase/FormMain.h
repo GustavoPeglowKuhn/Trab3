@@ -20,13 +20,6 @@ namespace projetoBase{
 	public ref class FormMain : public System::Windows::Forms::Form{
 	private:
 		int id;
-	private: System::Windows::Forms::ToolStrip^  toolStrip1;
-	private: System::Windows::Forms::ToolStripDropDownButton^  dd_file;
-	private: System::Windows::Forms::ToolStripMenuItem^  dd_file_new;
-	private: System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
-
-			 FormFicha^ formFicha;
-		//Form^ formNew;
 
 	public:
 		FormMain(void){
@@ -52,6 +45,10 @@ namespace projetoBase{
 
 	private:
 		Devart::Data::PostgreSql::PgSqlConnection^  pgSqlConnection1;
+		System::Windows::Forms::ToolStrip^  toolStrip1;
+		System::Windows::Forms::ToolStripDropDownButton^  dd_file;
+		System::Windows::Forms::ToolStripMenuItem^  dd_file_new;
+		System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
 		System::Windows::Forms::Label^  label1;
 		System::Windows::Forms::Label^  label2;
 		System::Windows::Forms::Label^  lbl_raca;
@@ -77,6 +74,7 @@ namespace projetoBase{
 		/// the contents of this method with the code editor.
 		/// </summary>
 		void InitializeComponent(void){
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormMain::typeid));
 			this->btn_select = (gcnew System::Windows::Forms::Button());
 			this->cb_jogador = (gcnew System::Windows::Forms::ComboBox());
 			this->cb_personagem = (gcnew System::Windows::Forms::ComboBox());
@@ -257,14 +255,14 @@ namespace projetoBase{
 			// dd_file_new
 			// 
 			this->dd_file_new->Name = L"dd_file_new";
-			this->dd_file_new->Size = System::Drawing::Size(152, 22);
+			this->dd_file_new->Size = System::Drawing::Size(127, 22);
 			this->dd_file_new->Text = L"Novo";
 			this->dd_file_new->Click += gcnew System::EventHandler(this, &FormMain::btn_new_Click);
 			// 
 			// dd_file_import
 			// 
 			this->dd_file_import->Name = L"dd_file_import";
-			this->dd_file_import->Size = System::Drawing::Size(152, 22);
+			this->dd_file_import->Size = System::Drawing::Size(127, 22);
 			this->dd_file_import->Text = L"Importar";
 			// 
 			// FormMain
@@ -285,6 +283,7 @@ namespace projetoBase{
 			this->Controls->Add(this->cb_personagem);
 			this->Controls->Add(this->cb_jogador);
 			this->Controls->Add(this->btn_select);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FormMain";
 			this->Text = L"SelectForm";
 			this->toolStrip1->ResumeLayout(false);
@@ -296,7 +295,7 @@ namespace projetoBase{
 #pragma endregion
 	private:
 		void get_cb_jogador_items(){
-			PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT jogador FROM personagem", pgSqlConnection1);
+			PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT distinct(jogador) FROM personagem", pgSqlConnection1);
 			cb_jogador->Items->Clear();
 			try{
 				pgSqlConnection1->Open();
@@ -346,31 +345,19 @@ namespace projetoBase{
 				}
 			} catch(Exception^){}
 		}
-
 		System::Void btn_select_Click(System::Object^  sender, System::EventArgs^  e){
-			ShowFormFicha(id);
+			FormFicha^ formFicha = gcnew FormFicha(pgSqlConnection1, id);
+			this->Hide();
+			formFicha->ShowDialog();
+			this->Show();
+			//this->formFicha->Show();
 		}
 		System::Void btn_new_Click(System::Object^  sender, System::EventArgs^  e){
-			ShowFormNovo();
-		}
-		//System::Void FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e){
-		//	this->Show();		////formFicha->OnClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &FormMain::FormFicha_FormClosed);
-		//}
-
-	public:			//O formulario da ficha pode chamar o formulario de novo formulario e vice versa
-		void ShowFormFicha(int personagemId){
-			this->formFicha = gcnew FormFicha(this, pgSqlConnection1, id);
-			//this->formFicha->ShowDialog();
-			this->formFicha->Show();
-			this->Hide();
-		}
-
-		void ShowFormNovo(){
-			FormNovo^ formNovo = gcnew FormNovo(this, pgSqlConnection1);
+			FormNovo^ formNovo = gcnew FormNovo(pgSqlConnection1);
 			this->Hide();
 			formNovo->ShowDialog();
 			this->Show();
-			get_cb_jogador_items();	//insere o personagem novo
+			get_cb_jogador_items();		//le o personagem novo
 		}
 	};
 }

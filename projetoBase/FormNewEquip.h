@@ -70,6 +70,7 @@ namespace projetoBase {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormNewEquip::typeid));
 			this->cb_item = (gcnew System::Windows::Forms::ComboBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
@@ -191,6 +192,7 @@ namespace projetoBase {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->cb_item);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FormNewEquip";
 			this->Text = L"FormNewEquip";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_quant))->EndInit();

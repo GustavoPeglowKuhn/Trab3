@@ -20,18 +20,12 @@ namespace projetoBase {
 		List<int> ^racasId, ^classesId;		//ids
 		//List<String^> ^racas, ^classes;		//nomes		//não  necessario
 		PgSqlConnection^ pgc;
-	private: System::Windows::Forms::TextBox^  txt_motiv;
-
-	private: System::Windows::Forms::Label^  label5;
-			 Form^ formMain;
+		//Form^ formMain;
 
 	public:
-		FormNovo(Form^ _formMain, PgSqlConnection^ _pgc) {
+		FormNovo(PgSqlConnection^ _pgc) {		//Form^ _formMain,	//formMain = _formMain;
 			InitializeComponent();
-			
-			formMain = _formMain;
 			pgc = _pgc;
-
 			loadRacas();
 		}
 
@@ -46,17 +40,17 @@ namespace projetoBase {
 		}
 	private: 
 		System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::TextBox^  txt_jogador;
-	private: System::Windows::Forms::TextBox^  txt_personagem;
-
-
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::ComboBox^  cb_raca;
-	private: System::Windows::Forms::Label^  label3;
-	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::ComboBox^  cb_classe;
-	private: System::Windows::Forms::Button^  btn_ok;
-	private: System::Windows::Forms::Button^  btn_cancel;
+		System::Windows::Forms::TextBox^  txt_jogador;
+		System::Windows::Forms::TextBox^  txt_personagem;
+		System::Windows::Forms::TextBox^  txt_motiv;
+		System::Windows::Forms::Label^  label5;
+		System::Windows::Forms::Label^  label2;
+		System::Windows::Forms::ComboBox^  cb_raca;
+		System::Windows::Forms::Label^  label3;
+		System::Windows::Forms::Label^  label4;
+		System::Windows::Forms::ComboBox^  cb_classe;
+		System::Windows::Forms::Button^  btn_ok;
+		System::Windows::Forms::Button^  btn_cancel;
 
 	private:
 		/// <summary>
@@ -71,6 +65,7 @@ namespace projetoBase {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormNovo::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->txt_jogador = (gcnew System::Windows::Forms::TextBox());
 			this->txt_personagem = (gcnew System::Windows::Forms::TextBox());
@@ -209,6 +204,7 @@ namespace projetoBase {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->txt_jogador);
 			this->Controls->Add(this->label1);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FormNovo";
 			this->Text = L"Novo Personagem";
 			this->ResumeLayout(false);
@@ -291,6 +287,6 @@ namespace projetoBase {
 			this->Close();	//retorna para o menu depois de criar o personagem
 							//trocar para enviar para o FromFicha
 		}
-	private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e){}
-};
+		System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e){}
+	};
 }

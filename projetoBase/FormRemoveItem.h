@@ -72,6 +72,7 @@ namespace projetoBase {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormRemoveItem::typeid));
 			this->btn_remove = (gcnew System::Windows::Forms::Button());
 			this->btn_cancel = (gcnew System::Windows::Forms::Button());
 			this->nud_quant = (gcnew System::Windows::Forms::NumericUpDown());
@@ -206,6 +207,7 @@ namespace projetoBase {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->cb_item);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FormRemoveItem";
 			this->Text = L"FormRemoveItem";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_quant))->EndInit();

@@ -2,12 +2,13 @@
 #include "FormMain.h"
 #include "FormNewEquip.h"
 #include "FormRemoveItem.h"
+#include "FormHabilidades.h"
+#include "FormD6.h"
 
 #include "Habilidade.h"
 #include "Equipamento.h"
 
 namespace projetoBase{
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -21,7 +22,7 @@ namespace projetoBase{
 	/// <summary>
 	/// Summary for Form1
 	/// </summary>
-	public ref class FormFicha : public System::Windows::Forms::Form{
+	public ref class FormFicha : public System::Windows::Forms::Form {
 	private:
 		//propriedades do personagem atual
 		int id, raca, classe;
@@ -34,30 +35,21 @@ namespace projetoBase{
 		//!propriedades do personagem atual
 
 		DateTime open;	//o memento de criacao do form, usado para compor o numero aleatorio do dado
-		Form^ formMain;
-	private: System::Windows::Forms::Button^  btn_equip_add;
+	private: System::Windows::Forms::NumericUpDown^  nud_mana;
+
+	private: System::Windows::Forms::NumericUpDown^  nud_vida;
 
 			 PgSqlConnection^ pgc;
 
-	//private:
-	//	FormFicha(void){
-	//		InitializeComponent();
-	//		//
-	//		//TODO: Add the constructor code here
-	//		//
-	//
-	//		open = DateTime::Now;
-	//	}
 	public:
-		FormFicha(Form^ _formMain, PgSqlConnection^ _pgc, int _id){
+		FormFicha( PgSqlConnection^ _pgc, int _id){	//Form^ _formMain,	//formMain = _formMain;
 			InitializeComponent();
 			open = DateTime::Now;
-			formMain = _formMain;
 			pgc = _pgc;
 			id = _id;
-			loadPersonagem(id);
-			loadHabilidades(id);
-			loadEquipamentos(id);
+			loadPersonagem();
+			loadHabilidades();
+			loadEquipamentos();
 		}
 
 	protected:
@@ -74,6 +66,15 @@ namespace projetoBase{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
+		System::Windows::Forms::ToolStripButton^  btn_5d6;
+		System::Windows::Forms::ToolStripButton^  btn_2d6;
+		System::Windows::Forms::ToolStripButton^  btn_3d6;
+		System::Windows::Forms::ToolStripButton^  btn_4d6;
+		System::Windows::Forms::ToolStripMenuItem^  menuToolStripMenuItem;
+		System::Windows::Forms::Label^  lbl_peso_carga;
+		System::Windows::Forms::Label^  label23;
+		System::Windows::Forms::Button^  btn_equip_add;
+		System::Windows::Forms::Button^  btn_hab_add;
 		System::Windows::Forms::Panel^  panel5;
 		System::Windows::Forms::Label^  label29;
 		System::Windows::Forms::Label^  label1;
@@ -98,8 +99,10 @@ namespace projetoBase{
 		System::Windows::Forms::Panel^  panel1;
 		System::Windows::Forms::Label^  lbl_mana_max;
 		System::Windows::Forms::Label^  lbl_vida_max;
-		System::Windows::Forms::Button^  button2;
-		System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  btn_mana;
+
+	private: System::Windows::Forms::Button^  btn_vida;
+
 		System::Windows::Forms::Label^  label9;
 		System::Windows::Forms::TextBox^  txt_mana;
 		System::Windows::Forms::Panel^  panel2;
@@ -128,10 +131,7 @@ namespace projetoBase{
 		System::Windows::Forms::TextBox^  txt_defesa_bloqueio;
 		System::Windows::Forms::Label^  label22;
 		System::Windows::Forms::ToolStripDropDownButton^  dd_file;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_new;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_save;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_export;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
 		System::Windows::Forms::Timer^  tmr_backup;
 		System::Windows::Forms::Label^  label30;
 		System::Windows::Forms::Label^  label28;
@@ -140,15 +140,12 @@ namespace projetoBase{
 		System::Windows::Forms::TextBox^  txt_habilidade;
 		System::Windows::Forms::Panel^  panel7;
 		System::Windows::Forms::TextBox^  txt_equipamentos;
-private: System::Windows::Forms::Button^  btn_equip_remove;
-
+		System::Windows::Forms::Button^  btn_equip_remove;
 		System::Windows::Forms::Label^  label31;
 		System::Windows::Forms::Label^  label32;
 		System::Windows::Forms::Label^  label33;
 		System::Windows::Forms::Label^  label34;
-		System::Windows::Forms::ToolStripButton^  btn_d6;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_save_as;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_load;
+		System::Windows::Forms::ToolStripButton^  btn_1d6;
 		System::ComponentModel::IContainer^  components;
 
 #pragma region Windows Form Designer generated code
@@ -158,6 +155,7 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 		/// </summary>
 		void InitializeComponent(void){
 			this->components = (gcnew System::ComponentModel::Container());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormFicha::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->lbl_personagem = (gcnew System::Windows::Forms::Label());
 			this->lbl_raca = (gcnew System::Windows::Forms::Label());
@@ -165,7 +163,9 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->lbl_jogador = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->pnl_desc = (gcnew System::Windows::Forms::Panel());
+			this->lbl_peso_carga = (gcnew System::Windows::Forms::Label());
 			this->lbl_motivacao = (gcnew System::Windows::Forms::Label());
+			this->label23 = (gcnew System::Windows::Forms::Label());
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->lbl_nivel = (gcnew System::Windows::Forms::Label());
 			this->label8 = (gcnew System::Windows::Forms::Label());
@@ -176,20 +176,22 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->lbl_experiencia = (gcnew System::Windows::Forms::Label());
 			this->toolStrip1 = (gcnew System::Windows::Forms::ToolStrip());
 			this->dd_file = (gcnew System::Windows::Forms::ToolStripDropDownButton());
-			this->dd_file_new = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->dd_file_save = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->dd_file_save_as = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->dd_file_load = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->menuToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_file_export = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->dd_file_import = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->btn_d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->btn_1d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->btn_2d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->btn_3d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->btn_4d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->btn_5d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->txt_vida = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->nud_mana = (gcnew System::Windows::Forms::NumericUpDown());
+			this->nud_vida = (gcnew System::Windows::Forms::NumericUpDown());
 			this->lbl_mana_max = (gcnew System::Windows::Forms::Label());
 			this->lbl_vida_max = (gcnew System::Windows::Forms::Label());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->btn_mana = (gcnew System::Windows::Forms::Button());
+			this->btn_vida = (gcnew System::Windows::Forms::Button());
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->txt_mana = (gcnew System::Windows::Forms::TextBox());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
@@ -222,6 +224,7 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->label28 = (gcnew System::Windows::Forms::Label());
 			this->label27 = (gcnew System::Windows::Forms::Label());
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
+			this->btn_hab_add = (gcnew System::Windows::Forms::Button());
 			this->txt_habilidade = (gcnew System::Windows::Forms::TextBox());
 			this->label29 = (gcnew System::Windows::Forms::Label());
 			this->panel7 = (gcnew System::Windows::Forms::Panel());
@@ -236,6 +239,8 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->pnl_desc->SuspendLayout();
 			this->toolStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_mana))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_vida))->BeginInit();
 			this->panel2->SuspendLayout();
 			this->panel3->SuspendLayout();
 			this->panel4->SuspendLayout();
@@ -300,7 +305,9 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			// 
 			// pnl_desc
 			// 
+			this->pnl_desc->Controls->Add(this->lbl_peso_carga);
 			this->pnl_desc->Controls->Add(this->lbl_motivacao);
+			this->pnl_desc->Controls->Add(this->label23);
 			this->pnl_desc->Controls->Add(this->label10);
 			this->pnl_desc->Controls->Add(this->lbl_nivel);
 			this->pnl_desc->Controls->Add(this->label8);
@@ -320,6 +327,15 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->pnl_desc->Size = System::Drawing::Size(411, 96);
 			this->pnl_desc->TabIndex = 6;
 			// 
+			// lbl_peso_carga
+			// 
+			this->lbl_peso_carga->AutoSize = true;
+			this->lbl_peso_carga->Location = System::Drawing::Point(278, 72);
+			this->lbl_peso_carga->Name = L"lbl_peso_carga";
+			this->lbl_peso_carga->Size = System::Drawing::Size(16, 13);
+			this->lbl_peso_carga->TabIndex = 39;
+			this->lbl_peso_carga->Text = L"...";
+			// 
 			// lbl_motivacao
 			// 
 			this->lbl_motivacao->AutoSize = true;
@@ -328,6 +344,15 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->lbl_motivacao->Size = System::Drawing::Size(16, 13);
 			this->lbl_motivacao->TabIndex = 14;
 			this->lbl_motivacao->Text = L"...";
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Location = System::Drawing::Point(192, 72);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(80, 13);
+			this->label23->TabIndex = 38;
+			this->label23->Text = L"Peso da Carga:";
 			// 
 			// label10
 			// 
@@ -403,7 +428,10 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			// 
 			// toolStrip1
 			// 
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){ this->dd_file, this->btn_d6 });
+			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6){
+				this->dd_file, this->btn_1d6,
+					this->btn_2d6, this->btn_3d6, this->btn_4d6, this->btn_5d6
+			});
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
 			this->toolStrip1->Size = System::Drawing::Size(838, 25);
@@ -414,9 +442,9 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			// 
 			this->dd_file->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
 			this->dd_file->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
-			this->dd_file->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6){
-				this->dd_file_new,
-					this->dd_file_save, this->dd_file_save_as, this->dd_file_load, this->dd_file_export, this->dd_file_import
+			this->dd_file->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){
+				this->menuToolStripMenuItem,
+					this->dd_file_export
 			});
 			this->dd_file->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.5F));
 			this->dd_file->ImageScaling = System::Windows::Forms::ToolStripItemImageScaling::None;
@@ -430,53 +458,72 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->dd_file->TextDirection = System::Windows::Forms::ToolStripTextDirection::Horizontal;
 			this->dd_file->TextImageRelation = System::Windows::Forms::TextImageRelation::TextBeforeImage;
 			// 
-			// dd_file_new
+			// menuToolStripMenuItem
 			// 
-			this->dd_file_new->Name = L"dd_file_new";
-			this->dd_file_new->Size = System::Drawing::Size(150, 22);
-			this->dd_file_new->Text = L"Novo";
-			this->dd_file_new->Click += gcnew System::EventHandler(this, &FormFicha::dd_file_new_Click);
-			// 
-			// dd_file_save
-			// 
-			this->dd_file_save->Enabled = false;
-			this->dd_file_save->Name = L"dd_file_save";
-			this->dd_file_save->Size = System::Drawing::Size(150, 22);
-			this->dd_file_save->Text = L"Salvar";
-			// 
-			// dd_file_save_as
-			// 
-			this->dd_file_save_as->Enabled = false;
-			this->dd_file_save_as->Name = L"dd_file_save_as";
-			this->dd_file_save_as->Size = System::Drawing::Size(150, 22);
-			this->dd_file_save_as->Text = L"Salvar Como";
-			// 
-			// dd_file_load
-			// 
-			this->dd_file_load->Name = L"dd_file_load";
-			this->dd_file_load->Size = System::Drawing::Size(150, 22);
-			this->dd_file_load->Text = L"Carregar";
-			this->dd_file_load->Click += gcnew System::EventHandler(this, &FormFicha::load_click);
+			this->menuToolStripMenuItem->Name = L"menuToolStripMenuItem";
+			this->menuToolStripMenuItem->Size = System::Drawing::Size(126, 22);
+			this->menuToolStripMenuItem->Text = L"Menu";
+			this->menuToolStripMenuItem->Click += gcnew System::EventHandler(this, &FormFicha::menuToolStripMenuItem_Click);
 			// 
 			// dd_file_export
 			// 
 			this->dd_file_export->Name = L"dd_file_export";
-			this->dd_file_export->Size = System::Drawing::Size(150, 22);
+			this->dd_file_export->Size = System::Drawing::Size(126, 22);
 			this->dd_file_export->Text = L"Exportar";
 			// 
-			// dd_file_import
+			// btn_1d6
 			// 
-			this->dd_file_import->Name = L"dd_file_import";
-			this->dd_file_import->Size = System::Drawing::Size(150, 22);
-			this->dd_file_import->Text = L"Importar";
+			this->btn_1d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->btn_1d6->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->btn_1d6->Name = L"btn_1d6";
+			this->btn_1d6->Size = System::Drawing::Size(30, 22);
+			this->btn_1d6->Tag = L"1";
+			this->btn_1d6->Text = L"1d6";
+			this->btn_1d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
 			// 
-			// btn_d6
+			// btn_2d6
 			// 
-			this->btn_d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
-			this->btn_d6->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->btn_d6->Name = L"btn_d6";
-			this->btn_d6->Size = System::Drawing::Size(24, 22);
-			this->btn_d6->Text = L"d6";
+			this->btn_2d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->btn_2d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_2d6.Image")));
+			this->btn_2d6->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->btn_2d6->Name = L"btn_2d6";
+			this->btn_2d6->Size = System::Drawing::Size(30, 22);
+			this->btn_2d6->Tag = L"2";
+			this->btn_2d6->Text = L"2d6";
+			this->btn_2d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
+			// 
+			// btn_3d6
+			// 
+			this->btn_3d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->btn_3d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_3d6.Image")));
+			this->btn_3d6->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->btn_3d6->Name = L"btn_3d6";
+			this->btn_3d6->Size = System::Drawing::Size(30, 22);
+			this->btn_3d6->Tag = L"3";
+			this->btn_3d6->Text = L"3d6";
+			this->btn_3d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
+			// 
+			// btn_4d6
+			// 
+			this->btn_4d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->btn_4d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_4d6.Image")));
+			this->btn_4d6->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->btn_4d6->Name = L"btn_4d6";
+			this->btn_4d6->Size = System::Drawing::Size(30, 22);
+			this->btn_4d6->Tag = L"4";
+			this->btn_4d6->Text = L"4d6";
+			this->btn_4d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
+			// 
+			// btn_5d6
+			// 
+			this->btn_5d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->btn_5d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_5d6.Image")));
+			this->btn_5d6->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->btn_5d6->Name = L"btn_5d6";
+			this->btn_5d6->Size = System::Drawing::Size(30, 22);
+			this->btn_5d6->Tag = L"5";
+			this->btn_5d6->Text = L"5d6";
+			this->btn_5d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
 			// 
 			// txt_vida
 			// 
@@ -499,18 +546,34 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->nud_mana);
+			this->panel1->Controls->Add(this->nud_vida);
 			this->panel1->Controls->Add(this->lbl_mana_max);
 			this->panel1->Controls->Add(this->lbl_vida_max);
-			this->panel1->Controls->Add(this->button2);
-			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->btn_mana);
+			this->panel1->Controls->Add(this->btn_vida);
 			this->panel1->Controls->Add(this->label9);
 			this->panel1->Controls->Add(this->txt_mana);
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->txt_vida);
 			this->panel1->Location = System::Drawing::Point(3, 7);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(97, 84);
+			this->panel1->Size = System::Drawing::Size(97, 95);
 			this->panel1->TabIndex = 16;
+			// 
+			// nud_mana
+			// 
+			this->nud_mana->Location = System::Drawing::Point(54, 58);
+			this->nud_mana->Name = L"nud_mana";
+			this->nud_mana->Size = System::Drawing::Size(42, 20);
+			this->nud_mana->TabIndex = 23;
+			// 
+			// nud_vida
+			// 
+			this->nud_vida->Location = System::Drawing::Point(0, 58);
+			this->nud_vida->Name = L"nud_vida";
+			this->nud_vida->Size = System::Drawing::Size(45, 20);
+			this->nud_vida->TabIndex = 22;
 			// 
 			// lbl_mana_max
 			// 
@@ -530,23 +593,25 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->lbl_vida_max->TabIndex = 20;
 			this->lbl_vida_max->Text = L"/60";
 			// 
-			// button2
+			// btn_mana
 			// 
-			this->button2->Location = System::Drawing::Point(55, 55);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(33, 23);
-			this->button2->TabIndex = 19;
-			this->button2->Text = L"+/-";
-			this->button2->UseVisualStyleBackColor = true;
+			this->btn_mana->Location = System::Drawing::Point(54, 75);
+			this->btn_mana->Name = L"btn_mana";
+			this->btn_mana->Size = System::Drawing::Size(43, 20);
+			this->btn_mana->TabIndex = 19;
+			this->btn_mana->Text = L"+/-";
+			this->btn_mana->UseVisualStyleBackColor = true;
+			this->btn_mana->Click += gcnew System::EventHandler(this, &FormFicha::btn_mana_Click);
 			// 
-			// button1
+			// btn_vida
 			// 
-			this->button1->Location = System::Drawing::Point(6, 55);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(33, 23);
-			this->button1->TabIndex = 18;
-			this->button1->Text = L"+/-";
-			this->button1->UseVisualStyleBackColor = true;
+			this->btn_vida->Location = System::Drawing::Point(0, 75);
+			this->btn_vida->Name = L"btn_vida";
+			this->btn_vida->Size = System::Drawing::Size(45, 20);
+			this->btn_vida->TabIndex = 18;
+			this->btn_vida->Text = L"+/-";
+			this->btn_vida->UseVisualStyleBackColor = true;
+			this->btn_vida->Click += gcnew System::EventHandler(this, &FormFicha::btn_vida_Click);
 			// 
 			// label9
 			// 
@@ -857,6 +922,7 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			// 
 			// panel6
 			// 
+			this->panel6->Controls->Add(this->btn_hab_add);
 			this->panel6->Controls->Add(this->txt_habilidade);
 			this->panel6->Controls->Add(this->label27);
 			this->panel6->Controls->Add(this->label28);
@@ -866,6 +932,16 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->panel6->Name = L"panel6";
 			this->panel6->Size = System::Drawing::Size(825, 214);
 			this->panel6->TabIndex = 47;
+			// 
+			// btn_hab_add
+			// 
+			this->btn_hab_add->Location = System::Drawing::Point(0, 0);
+			this->btn_hab_add->Name = L"btn_hab_add";
+			this->btn_hab_add->Size = System::Drawing::Size(24, 23);
+			this->btn_hab_add->TabIndex = 36;
+			this->btn_hab_add->Text = L"+";
+			this->btn_hab_add->UseVisualStyleBackColor = true;
+			this->btn_hab_add->Click += gcnew System::EventHandler(this, &FormFicha::btn_hab_add_Click);
 			// 
 			// txt_habilidade
 			// 
@@ -997,16 +1073,18 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->toolStrip1);
 			this->Controls->Add(this->pnl_desc);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"FormFicha";
 			this->Text = L"Form1";
-			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &FormFicha::FormFicha_FormClosed);
 			this->pnl_desc->ResumeLayout(false);
 			this->pnl_desc->PerformLayout();
 			this->toolStrip1->ResumeLayout(false);
 			this->toolStrip1->PerformLayout();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_mana))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_vida))->EndInit();
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
 			this->panel3->ResumeLayout(false);
@@ -1023,25 +1101,9 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 
 		}
 #pragma endregion
-
-		private: System::Void dd_file_new_Click(System::Object^  sender, System::EventArgs^  e){
-			//((projetoBase::FormMain^)formMain)->ShowFormNovo();
-			this->Close();
-		}
-		System::Void load_click(System::Object^  sender, System::EventArgs^  e){
-			this->Close();
-		}
-
-//ex://SELECT personagem.id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, raca.nome, classe.nome, raca.atributos[1]+classe.atributos[1]+personagem.atributos[1] AS forca, raca.atributos[2]+classe.atributos[2]+personagem.atributos[2] AS agilidade, raca.atributos[3]+classe.atributos[3]+personagem.atributos[3] AS inteligencia, raca.atributos[4]+classe.atributos[4]+personagem.atributos[4] AS vontade, defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] FROM personagem, raca, classe WHERE personagem.id = 1 AND raca.id = personagem.raca AND classe.id = personagem.classe
-		void loadPersonagem(int _id){	//id do personagem
-			//PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, "+
-			//"raca, classe, atributos, defesa, carga  FROM personagem WHERE id = " + id, pgSqlConnection1);
-			//PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, " +
-			//	//													 0		1			2		3			4			5		6		7		8		9
-			//	"raca, classe, atributos[1], atributos[2], atributos[3], atributos[4], defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] " +
-			//	//	10		11		12			13			14				15			16			17			18			19		20			21
-			//	" FROM personagem WHERE id = " , pgc);//formMain->pgSqlConnection1);
-			//formMain->pgSqlConnection1->Open();
+	private:
+		void loadPersonagem(){
+			//ex://SELECT personagem.id, personagem, jogador, motivacao, experiencia, nivel, mana_max, mana, vida_max, vida, raca.nome, classe.nome, raca.atributos[1]+classe.atributos[1]+personagem.atributos[1] AS forca, raca.atributos[2]+classe.atributos[2]+personagem.atributos[2] AS agilidade, raca.atributos[3]+classe.atributos[3]+personagem.atributos[3] AS inteligencia, raca.atributos[4]+classe.atributos[4]+personagem.atributos[4] AS vontade, defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] FROM personagem, raca, classe WHERE personagem.id = 1 AND raca.id = personagem.raca AND classe.id = personagem.classe
 			PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT personagem.id, personagem, jogador, motivacao, "+
 				"experiencia, nivel, mana_max, mana, vida_max, vida, "+
 				"raca.nome, classe.nome, "+
@@ -1050,7 +1112,7 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 				"raca.atributos[3] + classe.atributos[3] + personagem.atributos[3], "+
 				"raca.atributos[4] + classe.atributos[4] + personagem.atributos[4], "+
 				"defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] FROM personagem, raca, classe WHERE "+
-				"raca.id = personagem.raca AND classe.id = personagem.classe AND personagem.id = "+ _id, pgc);
+				"raca.id = personagem.raca AND classe.id = personagem.classe AND personagem.id = "+ id, pgc);
 			pgc->Open();
 			PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
 			try{
@@ -1062,36 +1124,34 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 					lbl_jogador->Text = pgReader->GetString(2);
 					lbl_motivacao->Text = pgReader->GetString(3);
 
-					experiencia	= pgReader->GetInt32(4);//= Int32::Parse(pgReader->GetString(4));
-					nivel		= pgReader->GetInt32(5);//= Int32::Parse(pgReader->GetString(5));
-					mana_max	= pgReader->GetInt32(6);//= Int32::Parse(pgReader->GetString(6));
-					mana		= pgReader->GetInt32(7);//= Int32::Parse(pgReader->GetString(7));
-					vida_max	= pgReader->GetInt32(8);//= Int32::Parse(pgReader->GetString(8));
-					vida		= pgReader->GetInt32(9);//= Int32::Parse(pgReader->GetString(9));
+					experiencia	= pgReader->GetInt32(4);
+					nivel		= pgReader->GetInt32(5);
+					mana_max	= pgReader->GetInt32(6);
+					mana		= pgReader->GetInt32(7);
+					vida_max	= pgReader->GetInt32(8);
+					vida		= pgReader->GetInt32(9);
 
-					//raca	= pgReader->GetInt32(10);//= Int32::Parse(pgReader->GetString(10));
-					//classe	= pgReader->GetInt32(11);//= Int32::Parse(pgReader->GetString(11));
 					lbl_raca->Text		= pgReader->GetString(10);
 					lbl_classe->Text	= pgReader->GetString(11);
 
-					forca			= pgReader->GetInt32(12);//= Int32::Parse(pgReader->GetString(12));
-					agilidade		= pgReader->GetInt32(13);//= Int32::Parse(pgReader->GetString(13));
-					inteligencia	= pgReader->GetInt32(14);//= Int32::Parse(pgReader->GetString(14));
-					vontade			= pgReader->GetInt32(15);//= Int32::Parse(pgReader->GetString(15));
+					forca			= pgReader->GetInt32(12);
+					agilidade		= pgReader->GetInt32(13);
+					inteligencia	= pgReader->GetInt32(14);
+					vontade			= pgReader->GetInt32(15);
 
-					bloqueio		= pgReader->GetInt32(16);//= Int32::Parse(pgReader->GetString(16));
-					esquiva			= pgReader->GetInt32(17);//= Int32::Parse(pgReader->GetString(17));
-					determinacao	= pgReader->GetInt32(18);//= Int32::Parse(pgReader->GetString(18));
-					basica			= pgReader->GetInt32(19);//= Int32::Parse(pgReader->GetString(19));
-					pesada			= pgReader->GetInt32(20);//= Int32::Parse(pgReader->GetString(20));
-					maxima			= pgReader->GetInt32(21);//= Int32::Parse(pgReader->GetString(21));
+					bloqueio		= pgReader->GetInt32(16);
+					esquiva			= pgReader->GetInt32(17);
+					determinacao	= pgReader->GetInt32(18);
+					basica			= pgReader->GetInt32(19);
+					pesada			= pgReader->GetInt32(20);
+					maxima			= pgReader->GetInt32(21);
 
-					lbl_experiencia->Text	= "" + experiencia;
-					lbl_nivel->Text			= "" + nivel;
+					lbl_experiencia->Text	= "" + experiencia + " / 10";
+					lbl_nivel->Text			= "" + nivel + " / 10";
 
-					lbl_mana_max->Text	= "" + mana_max;
+					lbl_mana_max->Text	= "/" + mana_max;
 					txt_mana->Text		= "" + mana;
-					lbl_vida_max->Text	= "" + vida_max;
+					lbl_vida_max->Text	= "/" + vida_max;
 					txt_vida->Text		= "" + vida;
 
 					txt_forca->Text			= "" + forca;
@@ -1099,13 +1159,20 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 					txt_inteligencia->Text	= "" + inteligencia;
 					txt_vontade->Text		= "" + vontade;
 
-					txt_defesa_bloqueio->Text		= "" + bloqueio;
-					txt_defesa_esquiva->Text		= "" + esquiva;
-					txt_defesa_determinacao->Text	= "" + determinacao;
+					txt_defesa_bloqueio->Text = "" + (5 + forca + bloqueio);		//pag.34	//bonus da armadura incluso em bloqueio
+					txt_defesa_esquiva->Text = "" + (5 + agilidade + esquiva);
+					txt_defesa_determinacao->Text = "" + (8 + (inteligencia > vontade ? inteligencia : vontade) + determinacao);
 
-					txt_carga_basica->Text = "" + basica;
-					txt_carga_pesada->Text = "" + pesada;
-					txt_carga_maxima->Text = "" + maxima;
+					txt_carga_basica->Text = "" + (07 * forca + basica);
+					txt_carga_pesada->Text = "" + (35 * forca + pesada);
+					txt_carga_maxima->Text = "" + (70 * forca + maxima);
+
+					this->Text = lbl_personagem->Text + ", " + lbl_raca->Text + " " + lbl_classe->Text + ", nivel " + nivel;
+
+					nud_vida->Minimum = -vida;
+					nud_vida->Maximum = vida_max - vida;
+					nud_mana->Minimum = -mana;
+					nud_mana->Maximum = mana_max - mana;
 
 					////le a raça e a classe pelos id de cada tabela armazenados na tabela personagem
 					//PgSqlCommand^ pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM raca WHERE id = " + raca, pgc);// pgSqlConnection1);
@@ -1123,12 +1190,11 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 				//pgSqlConnection1->Close();
 			}
 		}
-
-		void loadHabilidades(int _id){
+		void loadHabilidades(){
 			//ex://SELECT habilidade.id, nome, tipo, req_nivel, bonus FROM habilidade, m_hab WHERE h_id = id AND p_id = 1
 			try{
 				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT habilidade.id, tipo, nome, bonus "
-					"FROM habilidade, m_hab WHERE h_id = id AND p_id = " + _id, pgc);
+					"FROM habilidade, m_hab WHERE h_id = id AND p_id = " + id, pgc);
 				pgc->Open();
 				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
 				habilidades = gcnew List<Habilidade^>();
@@ -1144,11 +1210,11 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 				for each(Habilidade^ h in habilidades) txt_habilidade->AppendText(formatedHabilidade(h));
 			} catch(Exception^){}
 		}
-		void loadEquipamentos(int _id){
+		void loadEquipamentos(){
 			//ex://SELECT id, nome, peso, quantidade, n_usando FROM equipamento, m_equip WHERE e_id = id AND p_id = 1
 			try{
 				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("SELECT id, nome, peso, quantidade, n_usando "
-					"FROM equipamento, m_equip WHERE e_id = id AND p_id = " + _id, pgc);
+					"FROM equipamento, m_equip WHERE e_id = id AND p_id = " + id, pgc);
 				pgc->Open();
 				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
 				equipamentos = gcnew List<Equipamento^>();
@@ -1162,9 +1228,12 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 					));
 				}
 				txt_equipamentos->Clear();
+				float pesoTotal = 0;
 				for each(Equipamento^ e in equipamentos){
 					txt_equipamentos->AppendText(formatedEquipamento(e));
+					pesoTotal += e->peso*e->quantidade;
 				}
+				lbl_peso_carga->Text = "" + pesoTotal;
 			}catch(Exception^){}
 		}
 
@@ -1185,22 +1254,68 @@ private: System::Windows::Forms::Button^  btn_equip_remove;
 			return res;
 		}
 
-		int rand6(){
-			return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6;
-		}
-		System::Void FormFicha_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e){
-			formMain->Show();
-		}
+		int rand6(){ return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6; }
 
 		System::Void btn_equip_add_Click(System::Object^  sender, System::EventArgs^  e){
 			FormNewEquip^ formNewEquip = gcnew FormNewEquip(pgc, id);
 			formNewEquip->ShowDialog();
-			loadEquipamentos(id);
+			loadEquipamentos();
 		}
 		System::Void btn_equip_remove_Click(System::Object^  sender, System::EventArgs^  e){
 			FormRemoveItem^ formRemoveItem = gcnew FormRemoveItem(pgc, id);
 			formRemoveItem->ShowDialog();
-			loadEquipamentos(id);
+			loadEquipamentos();
+		}
+		
+		System::Void btn_hab_add_Click(System::Object^  sender, System::EventArgs^  e){
+			FormHabilidades^ formHabilidades = gcnew FormHabilidades(pgc, id);
+			formHabilidades->ShowDialog();
+			loadHabilidades();
+		}
+
+		System::Void menuToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e){
+			this->Close();
+		}
+
+		System::Void btn_d6_Click(System::Object^  sender, System::EventArgs^  e){
+			try{
+				int i = Int32::Parse(((String^)safe_cast<ToolStripButton^>(sender)->Tag));
+				FormD6^ formD6 = gcnew FormD6(i, forca, agilidade, inteligencia, vontade);
+				formD6->ShowDialog();
+			} catch(Exception^ e){
+				MessageBox::Show(e->Message, "D6's");
+			}
+		}
+		
+		System::Void btn_vida_Click(System::Object^  sender, System::EventArgs^  e){
+			vida += (int)nud_vida->Value;
+			txt_vida->Text = "" + vida;
+
+			//nud_vida->Value = 0;
+			nud_vida->Minimum = -vida;
+			nud_vida->Maximum = vida_max - vida;
+
+			try{
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("UPDATE personagem SET vida = " + vida
+					+ " WHERE id = " + id, pgc);
+				pgc->Open();
+				pgCommand->ExecuteNonQuery();
+			} catch(Exception^){}
+		}
+		System::Void btn_mana_Click(System::Object^  sender, System::EventArgs^  e){
+			mana += (int)nud_mana->Value;
+			txt_mana->Text = "" + mana;
+			
+			//nud_mana->Value = 0;
+			nud_mana->Minimum = -mana;
+			nud_mana->Maximum = mana_max - mana;
+
+			try{
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("UPDATE personagem SET mana = "+ mana
+					+ " WHERE id = " + id, pgc);
+				pgc->Open();
+				pgCommand->ExecuteNonQuery();
+			} catch(Exception^){}
 		}
 	};
 }

@@ -45,6 +45,12 @@
     <ClCompile Include="FormRemoveItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FormHabilidades.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FormD6.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -74,6 +80,12 @@
     <ClInclude Include="FormRemoveItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FormHabilidades.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FormD6.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -91,6 +103,9 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="FormNovo.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRemoveItem.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>
