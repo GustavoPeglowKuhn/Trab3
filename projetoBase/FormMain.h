@@ -1,6 +1,7 @@
 #pragma once
 #include "FormFicha.h"
 #include "FormNovo.h"
+#include "FormDB.h"
 
 namespace projetoBase{
 
@@ -47,8 +48,6 @@ namespace projetoBase{
 		Devart::Data::PostgreSql::PgSqlConnection^  pgSqlConnection1;
 		System::Windows::Forms::ToolStrip^  toolStrip1;
 		System::Windows::Forms::ToolStripDropDownButton^  dd_file;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_new;
-		System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
 		System::Windows::Forms::Label^  label1;
 		System::Windows::Forms::Label^  label2;
 		System::Windows::Forms::Label^  lbl_raca;
@@ -61,7 +60,17 @@ namespace projetoBase{
 		System::Windows::Forms::Label^  lbl_nivel;
 		System::Windows::Forms::Button^  btn_select;
 		System::Windows::Forms::Button^  btn_new;
-	
+		System::Windows::Forms::ToolStripMenuItem^  dd_file_new;
+		System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
+		System::Windows::Forms::ToolStripDropDownButton^  dd_db;
+
+
+		System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItem2;
+		System::Windows::Forms::ToolStripTextBox^  dd_txt_db_name;
+
+		System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_conn;
+	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_bd;
+
 	private:
 		/// <summary>
 		/// Required designer variable.
@@ -92,6 +101,11 @@ namespace projetoBase{
 			this->dd_file = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->dd_file_new = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_file_import = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dd_db = (gcnew System::Windows::Forms::ToolStripDropDownButton());
+			this->toolStripMenuItem2 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dd_txt_db_name = (gcnew System::Windows::Forms::ToolStripTextBox());
+			this->dd_btn_ch_bd = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dd_btn_ch_conn = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->toolStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -225,7 +239,7 @@ namespace projetoBase{
 			// 
 			// toolStrip1
 			// 
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1){ this->dd_file });
+			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){ this->dd_file, this->dd_db });
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
 			this->toolStrip1->Size = System::Drawing::Size(294, 25);
@@ -264,6 +278,58 @@ namespace projetoBase{
 			this->dd_file_import->Name = L"dd_file_import";
 			this->dd_file_import->Size = System::Drawing::Size(127, 22);
 			this->dd_file_import->Text = L"Importar";
+			// 
+			// dd_db
+			// 
+			this->dd_db->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->dd_db->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->dd_db->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){
+				this->toolStripMenuItem2,
+					this->dd_btn_ch_conn
+			});
+			this->dd_db->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.5F));
+			this->dd_db->ImageScaling = System::Windows::Forms::ToolStripItemImageScaling::None;
+			this->dd_db->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->dd_db->Name = L"dd_db";
+			this->dd_db->Padding = System::Windows::Forms::Padding(5, 0, 5, 0);
+			this->dd_db->Size = System::Drawing::Size(47, 22);
+			this->dd_db->Tag = L"1";
+			this->dd_db->Text = L"DB";
+			this->dd_db->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->dd_db->TextDirection = System::Windows::Forms::ToolStripTextDirection::Horizontal;
+			this->dd_db->TextImageRelation = System::Windows::Forms::TextImageRelation::TextBeforeImage;
+			// 
+			// toolStripMenuItem2
+			// 
+			this->toolStripMenuItem2->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){
+				this->dd_txt_db_name,
+					this->dd_btn_ch_bd
+			});
+			this->toolStripMenuItem2->Name = L"toolStripMenuItem2";
+			this->toolStripMenuItem2->Size = System::Drawing::Size(174, 22);
+			this->toolStripMenuItem2->Text = L"Banco de dados:";
+			this->toolStripMenuItem2->DropDownOpening += gcnew System::EventHandler(this, &FormMain::toolStripMenuItem2_DropDownOpening);
+			// 
+			// dd_txt_db_name
+			// 
+			this->dd_txt_db_name->BackColor = System::Drawing::SystemColors::HighlightText;
+			this->dd_txt_db_name->Name = L"dd_txt_db_name";
+			this->dd_txt_db_name->Size = System::Drawing::Size(100, 23);
+			// 
+			// dd_btn_ch_bd
+			// 
+			this->dd_btn_ch_bd->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->dd_btn_ch_bd->Name = L"dd_btn_ch_bd";
+			this->dd_btn_ch_bd->Size = System::Drawing::Size(160, 22);
+			this->dd_btn_ch_bd->Text = L"Trocar";
+			this->dd_btn_ch_bd->Click += gcnew System::EventHandler(this, &FormMain::trocarToolStripMenuItem_Click);
+			// 
+			// dd_btn_ch_conn
+			// 
+			this->dd_btn_ch_conn->Name = L"dd_btn_ch_conn";
+			this->dd_btn_ch_conn->Size = System::Drawing::Size(174, 22);
+			this->dd_btn_ch_conn->Text = L"Mudar conecção";
+			this->dd_btn_ch_conn->Click += gcnew System::EventHandler(this, &FormMain::dd_btn_ch_conn_Click);
 			// 
 			// FormMain
 			// 
@@ -355,9 +421,35 @@ namespace projetoBase{
 		System::Void btn_new_Click(System::Object^  sender, System::EventArgs^  e){
 			FormNovo^ formNovo = gcnew FormNovo(pgSqlConnection1);
 			this->Hide();
-			formNovo->ShowDialog();
+			formNovo->ShowDialog();		//fica travado até fechar o formNovo
 			this->Show();
 			get_cb_jogador_items();		//le o personagem novo
+		}
+		System::Void dd_btn_ch_conn_Click(System::Object^  sender, System::EventArgs^  e){
+			FormDB^ formDB = gcnew FormDB(pgSqlConnection1);
+			this->Enabled = false;		//deixa a tela de fundo cinza para dar um efeito
+			formDB->ShowDialog();		//fica travado até fechar o formDB
+			this->Enabled = true;
+			get_cb_jogador_items();		//le os personagens na nova conecção
+		}
+		System::Void trocarToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e){
+			if(dd_txt_db_name->Text->Length == 0){
+				MessageBox::Show("Digite o nome da base de dados no campo acima", "Nome da base de dados Invalido");
+				return;
+			}
+			String^ oldDb = pgSqlConnection1->Database;
+			try{
+				pgSqlConnection1->Close();
+				pgSqlConnection1->Database = dd_txt_db_name->Text;		//troca o bd
+				pgSqlConnection1->Open();
+				get_cb_jogador_items();		//le os personagens do novo bd
+			} catch(Exception^){
+				MessageBox::Show("Não foi possivel conectar a base de dados "+ dd_txt_db_name->Text, "Nome da base de dados Invalido");
+				pgSqlConnection1->Database = oldDb;
+			}
+		}
+		System::Void toolStripMenuItem2_DropDownOpening(System::Object^  sender, System::EventArgs^  e){
+			dd_txt_db_name->Text = pgSqlConnection1->Database;
 		}
 	};
 }

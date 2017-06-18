@@ -12,6 +12,7 @@ d:\prog\cpp\trab3\projetobase\debug\equipamento.obj
 d:\prog\cpp\trab3\projetobase\debug\assemblyinfo.obj
 d:\prog\cpp\trab3\projetobase\debug\.netframework,version=v4.5.2.assemblyattributes.obj
 d:\prog\cpp\trab3\projetobase\debug\.netframework,version=v4.5.2.assemblyattributes.asm
+d:\prog\cpp\trab3\projetobase\debug\formdb.obj
 d:\prog\cpp\trab3\debug\projetobase.exe
 d:\prog\cpp\trab3\debug\projetobase.pdb
 d:\prog\cpp\trab3\projetobase\debug\projetobase.tlog\metagen.write.1.tlog
@@ -25,6 +26,7 @@ d:\prog\cpp\trab3\projetobase\debug\projetobase.formficha.resources
 d:\prog\cpp\trab3\projetobase\debug\projetobase.formnewequip.resources
 d:\prog\cpp\trab3\projetobase\debug\projetobase.formnovo.resources
 d:\prog\cpp\trab3\projetobase\debug\projetobase.formremoveitem.resources
+d:\prog\cpp\trab3\projetobase\debug\projetobase.formdb.resources
 d:\prog\cpp\trab3\projetobase\debug\app.res
 d:\prog\cpp\trab3\projetobase\debug\projetobase.vcxproj.generateresource.cache
 d:\prog\cpp\trab3\projetobase\debug\projetobase.vcxprojresolveassemblyreference.cache

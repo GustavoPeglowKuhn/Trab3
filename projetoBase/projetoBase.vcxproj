@@ -98,6 +98,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Equipamento.cpp" />
     <ClCompile Include="FormD6.cpp" />
+    <ClCompile Include="FormDB.cpp" />
     <ClCompile Include="FormHabilidades.cpp" />
     <ClCompile Include="FormNewEquip.cpp" />
     <ClCompile Include="FormNovo.cpp" />
@@ -112,6 +113,9 @@
   <ItemGroup>
     <ClInclude Include="Equipamento.h" />
     <ClInclude Include="FormD6.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="FormDB.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="FormHabilidades.h">
@@ -142,6 +146,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FormD6.resx">
       <DependentUpon>FormD6.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDB.resx">
+      <DependentUpon>FormDB.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormHabilidades.resx">
       <DependentUpon>FormHabilidades.h</DependentUpon>

@@ -24,6 +24,9 @@ namespace projetoBase{
 	/// </summary>
 	public ref class FormFicha : public System::Windows::Forms::Form {
 	private:
+		PgSqlConnection^ pgc;
+		//DateTime open;
+
 		//propriedades do personagem atual
 		int id, raca, classe;
 		int experiencia, nivel, mana_max, mana, vida_max, vida;
@@ -31,20 +34,16 @@ namespace projetoBase{
 		int bloqueio, esquiva, determinacao;
 		int basica, pesada, maxima;
 		List<Habilidade^>^ habilidades;
-		List<Equipamento^>^ equipamentos;
+	private: System::Windows::Forms::ToolStripDropDownButton^  dd_help;
+	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_desenvolvedores;
+	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_problemas;
+			 List<Equipamento^>^ equipamentos;
 		//!propriedades do personagem atual
 
-		DateTime open;	//o memento de criacao do form, usado para compor o numero aleatorio do dado
-	private: System::Windows::Forms::NumericUpDown^  nud_mana;
-
-	private: System::Windows::Forms::NumericUpDown^  nud_vida;
-
-			 PgSqlConnection^ pgc;
-
 	public:
-		FormFicha( PgSqlConnection^ _pgc, int _id){	//Form^ _formMain,	//formMain = _formMain;
+		FormFicha( PgSqlConnection^ _pgc, int _id){
 			InitializeComponent();
-			open = DateTime::Now;
+			//open = DateTime::Now;
 			pgc = _pgc;
 			id = _id;
 			loadPersonagem();
@@ -66,6 +65,8 @@ namespace projetoBase{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
+		System::Windows::Forms::NumericUpDown^  nud_mana;
+		System::Windows::Forms::NumericUpDown^  nud_vida;
 		System::Windows::Forms::ToolStripButton^  btn_5d6;
 		System::Windows::Forms::ToolStripButton^  btn_2d6;
 		System::Windows::Forms::ToolStripButton^  btn_3d6;
@@ -99,10 +100,8 @@ namespace projetoBase{
 		System::Windows::Forms::Panel^  panel1;
 		System::Windows::Forms::Label^  lbl_mana_max;
 		System::Windows::Forms::Label^  lbl_vida_max;
-	private: System::Windows::Forms::Button^  btn_mana;
-
-	private: System::Windows::Forms::Button^  btn_vida;
-
+		System::Windows::Forms::Button^  btn_mana;
+		System::Windows::Forms::Button^  btn_vida;
 		System::Windows::Forms::Label^  label9;
 		System::Windows::Forms::TextBox^  txt_mana;
 		System::Windows::Forms::Panel^  panel2;
@@ -132,7 +131,7 @@ namespace projetoBase{
 		System::Windows::Forms::Label^  label22;
 		System::Windows::Forms::ToolStripDropDownButton^  dd_file;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_export;
-		System::Windows::Forms::Timer^  tmr_backup;
+
 		System::Windows::Forms::Label^  label30;
 		System::Windows::Forms::Label^  label28;
 		System::Windows::Forms::Label^  label27;
@@ -154,7 +153,6 @@ namespace projetoBase{
 		/// the contents of this method with the code editor.
 		/// </summary>
 		void InitializeComponent(void){
-			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormFicha::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->lbl_personagem = (gcnew System::Windows::Forms::Label());
@@ -183,6 +181,9 @@ namespace projetoBase{
 			this->btn_3d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->btn_4d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->btn_5d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->dd_help = (gcnew System::Windows::Forms::ToolStripDropDownButton());
+			this->dd_btn_desenvolvedores = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dd_btn_problemas = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->txt_vida = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
@@ -219,7 +220,6 @@ namespace projetoBase{
 			this->txt_defesa_esquiva = (gcnew System::Windows::Forms::TextBox());
 			this->txt_defesa_bloqueio = (gcnew System::Windows::Forms::TextBox());
 			this->label22 = (gcnew System::Windows::Forms::Label());
-			this->tmr_backup = (gcnew System::Windows::Forms::Timer(this->components));
 			this->label30 = (gcnew System::Windows::Forms::Label());
 			this->label28 = (gcnew System::Windows::Forms::Label());
 			this->label27 = (gcnew System::Windows::Forms::Label());
@@ -428,9 +428,9 @@ namespace projetoBase{
 			// 
 			// toolStrip1
 			// 
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6){
+			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7){
 				this->dd_file, this->btn_1d6,
-					this->btn_2d6, this->btn_3d6, this->btn_4d6, this->btn_5d6
+					this->btn_2d6, this->btn_3d6, this->btn_4d6, this->btn_5d6, this->dd_help
 			});
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
@@ -479,6 +479,7 @@ namespace projetoBase{
 			this->btn_1d6->Size = System::Drawing::Size(30, 22);
 			this->btn_1d6->Tag = L"1";
 			this->btn_1d6->Text = L"1d6";
+			this->btn_1d6->ToolTipText = L"rolar 1 d6";
 			this->btn_1d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
 			// 
 			// btn_2d6
@@ -490,6 +491,7 @@ namespace projetoBase{
 			this->btn_2d6->Size = System::Drawing::Size(30, 22);
 			this->btn_2d6->Tag = L"2";
 			this->btn_2d6->Text = L"2d6";
+			this->btn_2d6->ToolTipText = L"rolar 2 d6";
 			this->btn_2d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
 			// 
 			// btn_3d6
@@ -501,6 +503,7 @@ namespace projetoBase{
 			this->btn_3d6->Size = System::Drawing::Size(30, 22);
 			this->btn_3d6->Tag = L"3";
 			this->btn_3d6->Text = L"3d6";
+			this->btn_3d6->ToolTipText = L"rolar 3 d6";
 			this->btn_3d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
 			// 
 			// btn_4d6
@@ -512,6 +515,7 @@ namespace projetoBase{
 			this->btn_4d6->Size = System::Drawing::Size(30, 22);
 			this->btn_4d6->Tag = L"4";
 			this->btn_4d6->Text = L"4d6";
+			this->btn_4d6->ToolTipText = L"rolar 4 d6";
 			this->btn_4d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
 			// 
 			// btn_5d6
@@ -523,7 +527,35 @@ namespace projetoBase{
 			this->btn_5d6->Size = System::Drawing::Size(30, 22);
 			this->btn_5d6->Tag = L"5";
 			this->btn_5d6->Text = L"5d6";
+			this->btn_5d6->ToolTipText = L"rolar 5 d6";
 			this->btn_5d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
+			// 
+			// dd_help
+			// 
+			this->dd_help->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->dd_help->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2){
+				this->dd_btn_desenvolvedores,
+					this->dd_btn_problemas
+			});
+			this->dd_help->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"dd_help.Image")));
+			this->dd_help->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->dd_help->Name = L"dd_help";
+			this->dd_help->Size = System::Drawing::Size(51, 22);
+			this->dd_help->Text = L"Ajuda";
+			// 
+			// dd_btn_desenvolvedores
+			// 
+			this->dd_btn_desenvolvedores->Name = L"dd_btn_desenvolvedores";
+			this->dd_btn_desenvolvedores->Size = System::Drawing::Size(163, 22);
+			this->dd_btn_desenvolvedores->Text = L"Desenvolvedores";
+			this->dd_btn_desenvolvedores->Click += gcnew System::EventHandler(this, &FormFicha::dd_btn_desenvolvedores_Click);
+			// 
+			// dd_btn_problemas
+			// 
+			this->dd_btn_problemas->Name = L"dd_btn_problemas";
+			this->dd_btn_problemas->Size = System::Drawing::Size(163, 22);
+			this->dd_btn_problemas->Text = L"Problemas\?";
+			this->dd_btn_problemas->Click += gcnew System::EventHandler(this, &FormFicha::dd_btn_problemas_Click);
 			// 
 			// txt_vida
 			// 
@@ -886,10 +918,6 @@ namespace projetoBase{
 			this->label22->Size = System::Drawing::Size(57, 17);
 			this->label22->TabIndex = 0;
 			this->label22->Text = L"Defesa:";
-			// 
-			// tmr_backup
-			// 
-			this->tmr_backup->Interval = 300000;
 			// 
 			// label30
 			// 
@@ -1254,22 +1282,28 @@ namespace projetoBase{
 			return res;
 		}
 
-		int rand6(){ return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6; }
+		//int rand6(){ return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6; }
 
 		System::Void btn_equip_add_Click(System::Object^  sender, System::EventArgs^  e){
 			FormNewEquip^ formNewEquip = gcnew FormNewEquip(pgc, id);
+			this->Enabled = false;
 			formNewEquip->ShowDialog();
+			this->Enabled = true;
 			loadEquipamentos();
 		}
 		System::Void btn_equip_remove_Click(System::Object^  sender, System::EventArgs^  e){
 			FormRemoveItem^ formRemoveItem = gcnew FormRemoveItem(pgc, id);
+			this->Enabled = false;
 			formRemoveItem->ShowDialog();
+			this->Enabled = true;
 			loadEquipamentos();
 		}
 		
 		System::Void btn_hab_add_Click(System::Object^  sender, System::EventArgs^  e){
 			FormHabilidades^ formHabilidades = gcnew FormHabilidades(pgc, id);
+			this->Enabled = false;
 			formHabilidades->ShowDialog();
+			this->Enabled = true;
 			loadHabilidades();
 		}
 
@@ -1281,10 +1315,10 @@ namespace projetoBase{
 			try{
 				int i = Int32::Parse(((String^)safe_cast<ToolStripButton^>(sender)->Tag));
 				FormD6^ formD6 = gcnew FormD6(i, forca, agilidade, inteligencia, vontade);
+				this->Enabled = false;
 				formD6->ShowDialog();
-			} catch(Exception^ e){
-				MessageBox::Show(e->Message, "D6's");
-			}
+				this->Enabled = true;
+			} catch(Exception^){}
 		}
 		
 		System::Void btn_vida_Click(System::Object^  sender, System::EventArgs^  e){
@@ -1316,6 +1350,26 @@ namespace projetoBase{
 				pgc->Open();
 				pgCommand->ExecuteNonQuery();
 			} catch(Exception^){}
+		}
+		
+		System::Void dd_btn_desenvolvedores_Click(System::Object^  sender, System::EventArgs^  e){
+			MessageBox::Show(
+				"\tEste programa foi desenvolvido por Gustavo e Lucas.\r\n"
+				"\tEste progama é um trabalho da diciplina de Informatica Aplicada"
+				"\tEsta é apenas uma versão pre-alpha, muitas noites sem dormir\r\n"
+				"e muitos litro de café serão necessarios até o lançamento final",
+				"Desenvolvedores");
+		}
+		System::Void dd_btn_problemas_Click(System::Object^  sender, System::EventArgs^  e){
+			MessageBox::Show(
+				"\tAntes de usar o programa, lemre-se de instalar o postgresql, \r\n"
+				"criar o banco de dados chamado 'rpg3' e popular ele (um arquivo\r\n"
+				"'CreateInsert.sql' é disponibilisado junto com este programa para criar\r\n"
+				"as tabelas e os dados, execute ele pelo pgAdmin)"
+				"\tEsta é apenas uma versão pre-alpha, muitas noites sem dormir\r\n"
+				"e muitos litro de café serão necessarios até o lançamento final"
+				"\t\tE lembre-se, sempre é melhor chamar o Saul",
+				"Problemas?");
 		}
 	};
 }
