@@ -100,6 +100,7 @@
     <ClCompile Include="FormD6.cpp" />
     <ClCompile Include="FormDB.cpp" />
     <ClCompile Include="FormHabilidades.cpp" />
+    <ClCompile Include="FormLevelUp.cpp" />
     <ClCompile Include="FormNewEquip.cpp" />
     <ClCompile Include="FormNovo.cpp" />
     <ClCompile Include="FormRemoveItem.cpp" />
@@ -119,6 +120,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="FormHabilidades.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="FormLevelUp.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="FormMain.h">
@@ -152,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormHabilidades.resx">
       <DependentUpon>FormHabilidades.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLevelUp.resx">
+      <DependentUpon>FormLevelUp.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resX">
       <DependentUpon>FormMain.h</DependentUpon>

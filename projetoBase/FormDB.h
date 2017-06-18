@@ -65,6 +65,7 @@ namespace projetoBase {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(FormDB::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->txt_user = (gcnew System::Windows::Forms::TextBox());
 			this->txt_senha = (gcnew System::Windows::Forms::TextBox());
@@ -185,6 +186,8 @@ namespace projetoBase {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(284, 261);
 			this->Controls->Add(this->nud_porta);
 			this->Controls->Add(this->txt_conn);
@@ -197,6 +200,9 @@ namespace projetoBase {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->txt_user);
 			this->Controls->Add(this->label1);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"FormDB";
 			this->Text = L"FormDB";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_porta))->EndInit();

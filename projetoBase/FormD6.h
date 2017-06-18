@@ -239,6 +239,8 @@ namespace projetoBase {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(213, 230);
 			this->Controls->Add(this->btn_voltar);
 			this->Controls->Add(this->lbl_st);
@@ -254,6 +256,8 @@ namespace projetoBase {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->txt_d6_values);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"FormD6";
 			this->Text = L"FormD6";
 			this->ResumeLayout(false);

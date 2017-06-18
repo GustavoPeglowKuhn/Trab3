@@ -181,6 +181,8 @@ namespace projetoBase {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(219, 142);
 			this->Controls->Add(this->btn_ok);
 			this->Controls->Add(this->btn_cancel);
@@ -193,6 +195,8 @@ namespace projetoBase {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->cb_item);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"FormNewEquip";
 			this->Text = L"FormNewEquip";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_quant))->EndInit();

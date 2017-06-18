@@ -191,6 +191,8 @@ namespace projetoBase {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(422, 155);
 			this->Controls->Add(this->txt_motiv);
 			this->Controls->Add(this->label5);
@@ -205,6 +207,7 @@ namespace projetoBase {
 			this->Controls->Add(this->txt_jogador);
 			this->Controls->Add(this->label1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MaximizeBox = false;
 			this->Name = L"FormNovo";
 			this->Text = L"Novo Personagem";
 			this->ResumeLayout(false);

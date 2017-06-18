@@ -139,6 +139,8 @@ namespace projetoBase {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(310, 211);
 			this->Controls->Add(this->lbl_n_hab);
 			this->Controls->Add(this->label2);
@@ -148,6 +150,8 @@ namespace projetoBase {
 			this->Controls->Add(this->cb_hab);
 			this->Controls->Add(this->label1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"FormHabilidades";
 			this->Text = L"FormHabilidades";
 			this->ResumeLayout(false);

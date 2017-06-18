@@ -335,6 +335,8 @@ namespace projetoBase{
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSize = true;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(294, 232);
 			this->Controls->Add(this->toolStrip1);
 			this->Controls->Add(this->lbl_raca);
@@ -350,6 +352,7 @@ namespace projetoBase{
 			this->Controls->Add(this->cb_jogador);
 			this->Controls->Add(this->btn_select);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->MaximizeBox = false;
 			this->Name = L"FormMain";
 			this->Text = L"SelectForm";
 			this->toolStrip1->ResumeLayout(false);

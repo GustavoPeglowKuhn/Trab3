@@ -1,6 +1,7 @@
   projetoBase.FormD6.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormDB.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormHabilidades.resources - Embedded, ContainedInManifestFile, 
+  projetoBase.FormLevelUp.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormMain.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormFicha.resources - Embedded, ContainedInManifestFile, 
   projetoBase.FormNewEquip.resources - Embedded, ContainedInManifestFile, 
@@ -37,6 +38,9 @@ Class projetoBase.FormDB: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
 Class projetoBase.FormHabilidades: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(Devart.Data.PostgreSql.PgSqlConnection, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class projetoBase.FormLevelUp: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(Devart.Data.PostgreSql.PgSqlConnection, Int32, Int32, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
 Class projetoBase.FormNewEquip: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(Devart.Data.PostgreSql.PgSqlConnection, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName

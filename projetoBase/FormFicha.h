@@ -3,6 +3,7 @@
 #include "FormNewEquip.h"
 #include "FormRemoveItem.h"
 #include "FormHabilidades.h"
+#include "FormLevelUp.h"
 #include "FormD6.h"
 
 #include "Habilidade.h"
@@ -34,10 +35,7 @@ namespace projetoBase{
 		int bloqueio, esquiva, determinacao;
 		int basica, pesada, maxima;
 		List<Habilidade^>^ habilidades;
-	private: System::Windows::Forms::ToolStripDropDownButton^  dd_help;
-	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_desenvolvedores;
-	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_problemas;
-			 List<Equipamento^>^ equipamentos;
+		List<Equipamento^>^ equipamentos;
 		//!propriedades do personagem atual
 
 	public:
@@ -65,6 +63,11 @@ namespace projetoBase{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
+		System::Windows::Forms::ToolStripDropDownButton^  dd_help;
+		System::Windows::Forms::ToolStripMenuItem^  dd_btn_desenvolvedores;
+		System::Windows::Forms::ToolStripMenuItem^  dd_btn_problemas;
+		System::Windows::Forms::Button^  btn_add;
+		System::Windows::Forms::NumericUpDown^  nud_xp;
 		System::Windows::Forms::NumericUpDown^  nud_mana;
 		System::Windows::Forms::NumericUpDown^  nud_vida;
 		System::Windows::Forms::ToolStripButton^  btn_5d6;
@@ -131,7 +134,6 @@ namespace projetoBase{
 		System::Windows::Forms::Label^  label22;
 		System::Windows::Forms::ToolStripDropDownButton^  dd_file;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_export;
-
 		System::Windows::Forms::Label^  label30;
 		System::Windows::Forms::Label^  label28;
 		System::Windows::Forms::Label^  label27;
@@ -161,6 +163,8 @@ namespace projetoBase{
 			this->lbl_jogador = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->pnl_desc = (gcnew System::Windows::Forms::Panel());
+			this->btn_add = (gcnew System::Windows::Forms::Button());
+			this->nud_xp = (gcnew System::Windows::Forms::NumericUpDown());
 			this->lbl_peso_carga = (gcnew System::Windows::Forms::Label());
 			this->lbl_motivacao = (gcnew System::Windows::Forms::Label());
 			this->label23 = (gcnew System::Windows::Forms::Label());
@@ -237,6 +241,7 @@ namespace projetoBase{
 			this->label34 = (gcnew System::Windows::Forms::Label());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
 			this->pnl_desc->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_xp))->BeginInit();
 			this->toolStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_mana))->BeginInit();
@@ -305,6 +310,8 @@ namespace projetoBase{
 			// 
 			// pnl_desc
 			// 
+			this->pnl_desc->Controls->Add(this->btn_add);
+			this->pnl_desc->Controls->Add(this->nud_xp);
 			this->pnl_desc->Controls->Add(this->lbl_peso_carga);
 			this->pnl_desc->Controls->Add(this->lbl_motivacao);
 			this->pnl_desc->Controls->Add(this->label23);
@@ -326,6 +333,24 @@ namespace projetoBase{
 			this->pnl_desc->Name = L"pnl_desc";
 			this->pnl_desc->Size = System::Drawing::Size(411, 96);
 			this->pnl_desc->TabIndex = 6;
+			// 
+			// btn_add
+			// 
+			this->btn_add->Location = System::Drawing::Point(145, 52);
+			this->btn_add->Name = L"btn_add";
+			this->btn_add->Size = System::Drawing::Size(37, 20);
+			this->btn_add->TabIndex = 41;
+			this->btn_add->Text = L"Add";
+			this->btn_add->UseVisualStyleBackColor = true;
+			this->btn_add->Click += gcnew System::EventHandler(this, &FormFicha::btn_add_Click);
+			// 
+			// nud_xp
+			// 
+			this->nud_xp->Location = System::Drawing::Point(107, 52);
+			this->nud_xp->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4){ 10, 0, 0, 0 });
+			this->nud_xp->Name = L"nud_xp";
+			this->nud_xp->Size = System::Drawing::Size(36, 20);
+			this->nud_xp->TabIndex = 40;
 			// 
 			// lbl_peso_carga
 			// 
@@ -1101,12 +1126,14 @@ namespace projetoBase{
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->toolStrip1);
 			this->Controls->Add(this->pnl_desc);
+			this->DoubleBuffered = true;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"FormFicha";
 			this->Text = L"Form1";
 			this->pnl_desc->ResumeLayout(false);
 			this->pnl_desc->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_xp))->EndInit();
 			this->toolStrip1->ResumeLayout(false);
 			this->toolStrip1->PerformLayout();
 			this->panel1->ResumeLayout(false);
@@ -1354,22 +1381,44 @@ namespace projetoBase{
 		
 		System::Void dd_btn_desenvolvedores_Click(System::Object^  sender, System::EventArgs^  e){
 			MessageBox::Show(
-				"\tEste programa foi desenvolvido por Gustavo e Lucas.\r\n"
-				"\tEste progama é um trabalho da diciplina de Informatica Aplicada"
-				"\tEsta é apenas uma versão pre-alpha, muitas noites sem dormir\r\n"
-				"e muitos litro de café serão necessarios até o lançamento final",
+				"   Este programa foi desenvolvido por Gustavo e Lucas." + "\r\n"
+				"   Este progama é um trabalho da diciplina de Informatica Aplicada" + "\r\n"
+				"   Esta é apenas uma versão pre-alpha, muitas noites sem dormir" + "\r\n"
+				"e muitos litro de café serão necessarios até o lançamento final" + "\r\n"
+				"   E lembre-se, sempre é melhor chamar o Saul",
 				"Desenvolvedores");
 		}
 		System::Void dd_btn_problemas_Click(System::Object^  sender, System::EventArgs^  e){
 			MessageBox::Show(
-				"\tAntes de usar o programa, lemre-se de instalar o postgresql, \r\n"
-				"criar o banco de dados chamado 'rpg3' e popular ele (um arquivo\r\n"
-				"'CreateInsert.sql' é disponibilisado junto com este programa para criar\r\n"
-				"as tabelas e os dados, execute ele pelo pgAdmin)"
-				"\tEsta é apenas uma versão pre-alpha, muitas noites sem dormir\r\n"
-				"e muitos litro de café serão necessarios até o lançamento final"
-				"\t\tE lembre-se, sempre é melhor chamar o Saul",
+				"   Antes de usar o programa, lemre-se de instalar o postgresql," + "\r\n"
+				"criar o banco de dados chamado 'rpg3' e popular ele (um arquivo" + "\r\n"
+				"'CreateInsert.sql' é disponibilisado junto com este programa para" + "\r\n"
+				"criar as tabelas e os dados, execute ele pelo pgAdmin)" + "\r\n"
+				"   Esta é apenas uma versão pre-alpha, muitas noites sem dormir e" + "\r\n"
+				"muitos litro de café serão necessarios até o lançamento final" + "\r\n"
+				"   E lembre-se, sempre é melhor chamar o Saul",
 				"Problemas?");
+		}
+
+		System::Void btn_add_Click(System::Object^  sender, System::EventArgs^  e){
+			experiencia += (int)nud_xp->Value;
+			if(experiencia >= 10){
+				experiencia -= 10;
+				nivel++;
+				FormLevelUp^ formLevelUp = gcnew FormLevelUp(pgc, id, experiencia, nivel);
+				this->Enabled = false;
+				formLevelUp->ShowDialog();
+				this->Enabled = true;
+
+			} else{	//não subiu de nivel
+				try{
+					PgSqlCommand^ pgCommand = gcnew PgSqlCommand("UPDATE personagem SET "
+						"experiencia = " + experiencia + " WHERE id = " + id, pgc);
+					pgc->Open();
+					pgCommand->ExecuteNonQuery();
+				} catch(Exception^){}
+			}
+			loadPersonagem();
 		}
 	};
 }

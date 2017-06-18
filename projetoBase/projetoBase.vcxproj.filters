@@ -54,6 +54,9 @@
     <ClCompile Include="FormDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FormLevelUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -92,6 +95,9 @@
     <ClInclude Include="FormDB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FormLevelUp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -118,6 +124,9 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="FormHabilidades.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDB.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>
