@@ -42,6 +42,14 @@ namespace projetoBase{
 		FormFicha( PgSqlConnection^ _pgc, int _id){
 			InitializeComponent();
 			//open = DateTime::Now;
+
+			////double buffer
+			//this->SetStyle(static_cast<ControlStyles>(
+			//	ControlStyles::AllPaintingInWmPaint |
+			//	ControlStyles::DoubleBuffer |
+			//	ControlStyles::UserPaint), true);
+			//this->UpdateStyles();
+
 			pgc = _pgc;
 			id = _id;
 			loadPersonagem();
@@ -63,6 +71,9 @@ namespace projetoBase{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
+		System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+		System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+		System::Windows::Forms::SaveFileDialog^  saveFileDialog;
 		System::Windows::Forms::ToolStripDropDownButton^  dd_help;
 		System::Windows::Forms::ToolStripMenuItem^  dd_btn_desenvolvedores;
 		System::Windows::Forms::ToolStripMenuItem^  dd_btn_problemas;
@@ -180,11 +191,13 @@ namespace projetoBase{
 			this->dd_file = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->menuToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_file_export = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->btn_1d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->btn_2d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->btn_3d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->btn_4d6 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->btn_5d6 = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->dd_help = (gcnew System::Windows::Forms::ToolStripDropDownButton());
 			this->dd_btn_desenvolvedores = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_btn_problemas = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -240,6 +253,7 @@ namespace projetoBase{
 			this->label33 = (gcnew System::Windows::Forms::Label());
 			this->label34 = (gcnew System::Windows::Forms::Label());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
+			this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->pnl_desc->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_xp))->BeginInit();
 			this->toolStrip1->SuspendLayout();
@@ -453,9 +467,9 @@ namespace projetoBase{
 			// 
 			// toolStrip1
 			// 
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7){
-				this->dd_file, this->btn_1d6,
-					this->btn_2d6, this->btn_3d6, this->btn_4d6, this->btn_5d6, this->dd_help
+			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9){
+				this->dd_file, this->toolStripSeparator1,
+					this->btn_1d6, this->btn_2d6, this->btn_3d6, this->btn_4d6, this->btn_5d6, this->toolStripSeparator2, this->dd_help
 			});
 			this->toolStrip1->Location = System::Drawing::Point(0, 0);
 			this->toolStrip1->Name = L"toolStrip1";
@@ -495,13 +509,19 @@ namespace projetoBase{
 			this->dd_file_export->Name = L"dd_file_export";
 			this->dd_file_export->Size = System::Drawing::Size(126, 22);
 			this->dd_file_export->Text = L"Exportar";
+			this->dd_file_export->Click += gcnew System::EventHandler(this, &FormFicha::dd_file_export_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this->toolStripSeparator1->Name = L"toolStripSeparator1";
+			this->toolStripSeparator1->Size = System::Drawing::Size(6, 25);
 			// 
 			// btn_1d6
 			// 
-			this->btn_1d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->btn_1d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_1d6.Image")));
 			this->btn_1d6->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->btn_1d6->Name = L"btn_1d6";
-			this->btn_1d6->Size = System::Drawing::Size(30, 22);
+			this->btn_1d6->Size = System::Drawing::Size(46, 22);
 			this->btn_1d6->Tag = L"1";
 			this->btn_1d6->Text = L"1d6";
 			this->btn_1d6->ToolTipText = L"rolar 1 d6";
@@ -509,11 +529,10 @@ namespace projetoBase{
 			// 
 			// btn_2d6
 			// 
-			this->btn_2d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 			this->btn_2d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_2d6.Image")));
 			this->btn_2d6->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->btn_2d6->Name = L"btn_2d6";
-			this->btn_2d6->Size = System::Drawing::Size(30, 22);
+			this->btn_2d6->Size = System::Drawing::Size(46, 22);
 			this->btn_2d6->Tag = L"2";
 			this->btn_2d6->Text = L"2d6";
 			this->btn_2d6->ToolTipText = L"rolar 2 d6";
@@ -521,11 +540,10 @@ namespace projetoBase{
 			// 
 			// btn_3d6
 			// 
-			this->btn_3d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 			this->btn_3d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_3d6.Image")));
 			this->btn_3d6->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->btn_3d6->Name = L"btn_3d6";
-			this->btn_3d6->Size = System::Drawing::Size(30, 22);
+			this->btn_3d6->Size = System::Drawing::Size(46, 22);
 			this->btn_3d6->Tag = L"3";
 			this->btn_3d6->Text = L"3d6";
 			this->btn_3d6->ToolTipText = L"rolar 3 d6";
@@ -533,11 +551,10 @@ namespace projetoBase{
 			// 
 			// btn_4d6
 			// 
-			this->btn_4d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 			this->btn_4d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_4d6.Image")));
 			this->btn_4d6->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->btn_4d6->Name = L"btn_4d6";
-			this->btn_4d6->Size = System::Drawing::Size(30, 22);
+			this->btn_4d6->Size = System::Drawing::Size(46, 22);
 			this->btn_4d6->Tag = L"4";
 			this->btn_4d6->Text = L"4d6";
 			this->btn_4d6->ToolTipText = L"rolar 4 d6";
@@ -545,15 +562,19 @@ namespace projetoBase{
 			// 
 			// btn_5d6
 			// 
-			this->btn_5d6->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 			this->btn_5d6->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btn_5d6.Image")));
 			this->btn_5d6->ImageTransparentColor = System::Drawing::Color::Magenta;
 			this->btn_5d6->Name = L"btn_5d6";
-			this->btn_5d6->Size = System::Drawing::Size(30, 22);
+			this->btn_5d6->Size = System::Drawing::Size(46, 22);
 			this->btn_5d6->Tag = L"5";
 			this->btn_5d6->Text = L"5d6";
 			this->btn_5d6->ToolTipText = L"rolar 5 d6";
 			this->btn_5d6->Click += gcnew System::EventHandler(this, &FormFicha::btn_d6_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this->toolStripSeparator2->Name = L"toolStripSeparator2";
+			this->toolStripSeparator2->Size = System::Drawing::Size(6, 25);
 			// 
 			// dd_help
 			// 
@@ -1114,6 +1135,10 @@ namespace projetoBase{
 			this->panel5->Size = System::Drawing::Size(411, 102);
 			this->panel5->TabIndex = 84;
 			// 
+			// saveFileDialog
+			// 
+			this->saveFileDialog->Filter = L"Saves files|*.rpg|All files|*.*";
+			// 
 			// FormFicha
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1126,7 +1151,6 @@ namespace projetoBase{
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->toolStrip1);
 			this->Controls->Add(this->pnl_desc);
-			this->DoubleBuffered = true;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"FormFicha";
@@ -1401,6 +1425,7 @@ namespace projetoBase{
 		}
 
 		System::Void btn_add_Click(System::Object^  sender, System::EventArgs^  e){
+			if(nud_xp->Value == 0) return;
 			experiencia += (int)nud_xp->Value;
 			if(experiencia >= 10){
 				experiencia -= 10;
@@ -1418,7 +1443,85 @@ namespace projetoBase{
 					pgCommand->ExecuteNonQuery();
 				} catch(Exception^){}
 			}
+			nud_xp->Value = 0;
 			loadPersonagem();
+		}
+		System::Void dd_file_export_Click(System::Object^  sender, System::EventArgs^  e){
+			//if(DialogResult
+			saveFileDialog->ShowDialog();
+
+			return;
+			
+			try{
+				IO::FileStream^ f = gcnew IO::FileStream(saveFileDialog->FileName, IO::FileMode::CreateNew);
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand(
+					"SELECT "
+					+"personagem, jogador, motivacao, "
+					+"experiencia, nivel, mana_max, mana, vida_max, vida, raca, classe, "
+					+"personagem.atributos[1], "
+					+"personagem.atributos[2], "
+					+"personagem.atributos[3], "
+					+"personagem.atributos[4], "
+					+"defesa[1], "
+					+"defesa[2], "
+					+"defesa[3], "
+					+"carga[1], "
+					+"carga[2], "
+					+"carga[3] "
+					" FROM personagem WHERE id = " + id, pgc);
+				pgc->Open();
+				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				if(pgReader->Read()){
+					f->Write((array<unsigned char>^)pgReader->GetString( 0)->ToCharArray(), 0, pgReader->GetString( 0)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 1)->ToCharArray(), 0, pgReader->GetString( 1)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 2)->ToCharArray(), 0, pgReader->GetString( 2)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 3)->ToCharArray(), 0, pgReader->GetString( 3)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 4)->ToCharArray(), 0, pgReader->GetString( 4)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 5)->ToCharArray(), 0, pgReader->GetString( 5)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 6)->ToCharArray(), 0, pgReader->GetString( 6)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 7)->ToCharArray(), 0, pgReader->GetString( 7)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 8)->ToCharArray(), 0, pgReader->GetString( 8)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString( 9)->ToCharArray(), 0, pgReader->GetString( 9)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(10)->ToCharArray(), 0, pgReader->GetString(10)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(11)->ToCharArray(), 0, pgReader->GetString(11)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(12)->ToCharArray(), 0, pgReader->GetString(12)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(13)->ToCharArray(), 0, pgReader->GetString(13)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(14)->ToCharArray(), 0, pgReader->GetString(14)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(15)->ToCharArray(), 0, pgReader->GetString(15)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(16)->ToCharArray(), 0, pgReader->GetString(16)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(17)->ToCharArray(), 0, pgReader->GetString(17)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(18)->ToCharArray(), 0, pgReader->GetString(18)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(19)->ToCharArray(), 0, pgReader->GetString(19)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(20)->ToCharArray(), 0, pgReader->GetString(20)->Length); f->WriteByte(',');
+					f->Write((array<unsigned char>^)pgReader->GetString(21)->ToCharArray(), 0, pgReader->GetString(21)->Length);
+				}
+				f->WriteByte(';');
+
+				//pgCommand = gcnew PgSqlCommand(
+				//	" SELECT "
+				//	" h_id "
+				//	" FROM m_hab WHERE p_id = " + id, pgc);
+				//pgc->Open();
+				//PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				//if(pgReader->Read()){
+				//	f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
+				//}while(pgReader->Read()){
+				//	f->WriteByte(','); f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
+				//}
+				//f->WriteByte(';');
+				//
+				//pgCommand = gcnew PgSqlCommand(
+				//	" SELECT "
+				//	" e_id, quantidade, n_usando "
+				//	" FROM m_equip WHERE p_id = " + id, pgc);
+				//pgc->Open();
+				//PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				//if(pgReader->Read()){
+				//	f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
+				//}while(pgReader->Read()){
+				//	f->WriteByte(','); f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
+				//}
+			} catch(Exception^){}
 		}
 	};
 }

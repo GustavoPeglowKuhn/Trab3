@@ -25,12 +25,6 @@ namespace projetoBase{
 	public:
 		FormMain(void){
 			InitializeComponent();
-//			this->SetStyle(static_cast<ControlStyles>(
-//				ControlStyles::AllPaintingInWmPaint |
-//				ControlStyles::DoubleBuffer |
-//				ControlStyles::UserPaint), true);
-//			this->UpdateStyles();
-
 			get_cb_jogador_items();		//pega a lista de todos os jogadores no banco de daddos
 		}
 
@@ -70,6 +64,7 @@ namespace projetoBase{
 
 		System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_conn;
 	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_bd;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
 
 	private:
 		/// <summary>
@@ -106,6 +101,7 @@ namespace projetoBase{
 			this->dd_txt_db_name = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->dd_btn_ch_bd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->dd_btn_ch_conn = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->toolStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -278,6 +274,7 @@ namespace projetoBase{
 			this->dd_file_import->Name = L"dd_file_import";
 			this->dd_file_import->Size = System::Drawing::Size(127, 22);
 			this->dd_file_import->Text = L"Importar";
+			this->dd_file_import->Click += gcnew System::EventHandler(this, &FormMain::dd_file_import_Click);
 			// 
 			// dd_db
 			// 
@@ -330,6 +327,12 @@ namespace projetoBase{
 			this->dd_btn_ch_conn->Size = System::Drawing::Size(174, 22);
 			this->dd_btn_ch_conn->Text = L"Mudar conecção";
 			this->dd_btn_ch_conn->Click += gcnew System::EventHandler(this, &FormMain::dd_btn_ch_conn_Click);
+			// 
+			// openFileDialog
+			// 
+			this->openFileDialog->DefaultExt = L"rpg";
+			this->openFileDialog->Filter = L"Saves files|*.rpg|All files|*.*";
+			this->openFileDialog->Title = L"Imprte um personagem";
 			// 
 			// FormMain
 			// 
@@ -453,6 +456,30 @@ namespace projetoBase{
 		}
 		System::Void toolStripMenuItem2_DropDownOpening(System::Object^  sender, System::EventArgs^  e){
 			dd_txt_db_name->Text = pgSqlConnection1->Database;
+		}
+		System::Void dd_file_import_Click(System::Object^  sender, System::EventArgs^  e){
+			openFileDialog->ShowDialog();
+			return;
+
+			//if(openFileDialog->ShowDialog() == Form::DialogResult::CancelButton) return;
+			//IO::FileStream^ f = gcnew IO::FileStream(openFileDialog->FileName, IO::FileMode::Open);
+
+			//IO::FileStream^ f = gcnew IO::FileStream("", IO::FileMode::Open);
+			//int size = f->Length;
+			//array<String^>^ personagem = gcnew array<String^>(22);
+			//int ai = 0;
+			//String^ aux = String::Empty;
+			//for(int i = 0; i < size; i++){
+			//	char c = (char)f->ReadByte();
+			//	if(c == ','){
+			//		personagem[ai] = aux;
+			//		aux = String::Empty;
+			//	} else if(c=='\r' || c == '\n'){	//faz nada
+			//	} else{
+			//		if(aux->Length == 0 && c == ' ');	//faz nada
+			//		aux += c;
+			//	}
+			//}
 		}
 	};
 }

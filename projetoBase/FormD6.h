@@ -39,14 +39,25 @@ namespace projetoBase {
 			//joga os dados
 			Random^ rand = gcnew Random( DateTime::Now.Millisecond );
 			somaParcial = 0;
+			int n1=0, n6=0;		//nummero de 1's e 6's
 			for(int i = 0; i < n-1; i++){
 				int r = 1 + (rand->Next() % 6);
 				txt_d6_values->Text += "" + r + ", ";
 				somaParcial += r;
+				if(r == 1) n1++;
+				else if(r == 6) n6++;
 			}
 			int r = 1 + (rand->Next() % 6);
 			txt_d6_values->Text += "" + r;
 			somaParcial += r;
+			if(r == 1) n1++;
+			else if(r == 6) n6++;
+
+			if(n1 == n){
+				MessageBox::Show("Um em todos os dados", "Erro Crítico", MessageBoxButtons::OK);
+			} else if(n6 >= 2){
+				MessageBox::Show("Seis em "+n6+" os dados", "Acerto Crítico", MessageBoxButtons::OK);
+			}
 
 			//somaTotal = somaParcial;
 			lbl_soma->Text = "" + somaParcial;
