@@ -153,7 +153,7 @@ namespace projetoBase {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"FormHabilidades";
-			this->Text = L"FormHabilidades";
+			this->Text = L"Habilidades";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

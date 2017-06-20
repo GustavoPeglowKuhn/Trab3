@@ -270,7 +270,7 @@ namespace projetoBase {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"FormD6";
-			this->Text = L"FormD6";
+			this->Text = L"D6";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

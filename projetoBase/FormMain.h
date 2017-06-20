@@ -4,13 +4,13 @@
 #include "FormDB.h"
 
 namespace projetoBase{
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+
 
 	//using namespace System::Collections::Generic;		//List<...>
 	using namespace Devart::Data::PostgreSql;
@@ -57,14 +57,11 @@ namespace projetoBase{
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_new;
 		System::Windows::Forms::ToolStripMenuItem^  dd_file_import;
 		System::Windows::Forms::ToolStripDropDownButton^  dd_db;
-
-
 		System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItem2;
 		System::Windows::Forms::ToolStripTextBox^  dd_txt_db_name;
-
 		System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_conn;
-	private: System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_bd;
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
+		System::Windows::Forms::ToolStripMenuItem^  dd_btn_ch_bd;
+		System::Windows::Forms::OpenFileDialog^  openFileDialog;
 
 	private:
 		/// <summary>
@@ -325,7 +322,7 @@ namespace projetoBase{
 			// 
 			this->dd_btn_ch_conn->Name = L"dd_btn_ch_conn";
 			this->dd_btn_ch_conn->Size = System::Drawing::Size(174, 22);
-			this->dd_btn_ch_conn->Text = L"Mudar conecção";
+			this->dd_btn_ch_conn->Text = L"Mudar conexão";
 			this->dd_btn_ch_conn->Click += gcnew System::EventHandler(this, &FormMain::dd_btn_ch_conn_Click);
 			// 
 			// openFileDialog
@@ -357,7 +354,7 @@ namespace projetoBase{
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"FormMain";
-			this->Text = L"SelectForm";
+			this->Text = L"Selecionar Personagem";
 			this->toolStrip1->ResumeLayout(false);
 			this->toolStrip1->PerformLayout();
 			this->ResumeLayout(false);
@@ -458,28 +455,51 @@ namespace projetoBase{
 			dd_txt_db_name->Text = pgSqlConnection1->Database;
 		}
 		System::Void dd_file_import_Click(System::Object^  sender, System::EventArgs^  e){
-			openFileDialog->ShowDialog();
-			return;
+			if(openFileDialog->ShowDialog() == ::System::Windows::Forms::DialogResult::Cancel) return;
 
-			//if(openFileDialog->ShowDialog() == Form::DialogResult::CancelButton) return;
-			//IO::FileStream^ f = gcnew IO::FileStream(openFileDialog->FileName, IO::FileMode::Open);
+			StreamReader^ sr = gcnew StreamReader(openFileDialog->FileName);
+			String^ file = sr->ReadLine();
 
-			//IO::FileStream^ f = gcnew IO::FileStream("", IO::FileMode::Open);
-			//int size = f->Length;
-			//array<String^>^ personagem = gcnew array<String^>(22);
-			//int ai = 0;
-			//String^ aux = String::Empty;
-			//for(int i = 0; i < size; i++){
-			//	char c = (char)f->ReadByte();
-			//	if(c == ','){
-			//		personagem[ai] = aux;
-			//		aux = String::Empty;
-			//	} else if(c=='\r' || c == '\n'){	//faz nada
-			//	} else{
-			//		if(aux->Length == 0 && c == ' ');	//faz nada
-			//		aux += c;
-			//	}
-			//}
+			array<String^>^ phi = file->Split(';');
+			array<String^>^ p = phi[0]->Split(',');
+			String^ aux="";
+			array<String^>^ h = phi[1]->Split(',');
+			
+			for(int i = 3; i < 21; i++) aux += ","+p[i];
+
+			try{
+				PgSqlCommand^ pgCommand = gcnew PgSqlCommand("INSERT INTO personagem "
+					+ "(personagem, jogador, motivacao, "
+					+ "experiencia, nivel, mana_max, mana, vida_max, vida, raca, classe, "
+					+ "atributos[1], atributos[2], atributos[3], atributos[4], "
+					+ "defesa[1], defesa[2], defesa[3], "
+					+ "carga[1],  carga[2],  carga[3] ) "
+					+ "VALUES ("
+					+ "'" + p[0] + "','" + p[1] + "','" + p[2] + "'" + aux + "); "
+					//+habQuery
+					//+itemQuery
+					, pgSqlConnection1);
+				pgSqlConnection1->Open();
+				pgCommand->ExecuteNonQuery();
+
+				for each (String^ hab in h){
+					pgCommand = gcnew PgSqlCommand("INSERT INTO m_hab (p_id, h_id) VALUES ("
+						"(currval('personagem_id_seq'::regclass))," + hab + "); ", pgSqlConnection1);
+					pgSqlConnection1->Open();
+					pgCommand->ExecuteNonQuery();
+				}
+				
+				array<String^>^ i = phi[2]->Split('/');
+				for each (String^ item in i){
+					pgCommand = gcnew PgSqlCommand("INSERT INTO m_equip (p_id, e_id, quantidade, n_usando) VALUES ("
+						"(currval('personagem_id_seq'::regclass)), "
+						+ item + "); ", pgSqlConnection1);
+					pgSqlConnection1->Open();
+					pgCommand->ExecuteNonQuery();
+				}
+			} catch(Exception^ e){
+				MessageBox::Show(e->Message, "erro");
+			}
 		}
 	};
 }

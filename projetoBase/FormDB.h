@@ -169,9 +169,9 @@ namespace projetoBase {
 			this->label4->AutoSize = true;
 			this->label4->Location = System::Drawing::Point(28, 26);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(59, 13);
+			this->label4->Size = System::Drawing::Size(32, 13);
 			this->label4->TabIndex = 9;
-			this->label4->Text = L"Conecção:";
+			this->label4->Text = L"Host:";
 			// 
 			// nud_porta
 			// 
@@ -204,7 +204,7 @@ namespace projetoBase {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"FormDB";
-			this->Text = L"FormDB";
+			this->Text = L"Selecionar a Conexão";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_porta))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -213,7 +213,7 @@ namespace projetoBase {
 #pragma endregion
 		bool testar(){
 			if(txt_conn->Text->Length == 0){
-				MessageBox::Show("digite a string de conecção do banco de dados\r\n"
+				MessageBox::Show("digite a o host do banco de dados\r\n"
 					"tente 'localhost'", "Usuario em branco");
 				return false;
 			}

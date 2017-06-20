@@ -16,6 +16,8 @@ namespace projetoBase{
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
+	using namespace System::Text;
 
 	using namespace System::Collections::Generic;		//List<...>
 	using namespace Devart::Data::PostgreSql;
@@ -26,6 +28,7 @@ namespace projetoBase{
 	public ref class FormFicha : public System::Windows::Forms::Form {
 	private:
 		PgSqlConnection^ pgc;
+		System::Windows::Forms::ToolTip^ toolTip1 = gcnew System::Windows::Forms::ToolTip();
 		//DateTime open;
 
 		//propriedades do personagem atual
@@ -1201,7 +1204,11 @@ namespace projetoBase{
 
 					lbl_personagem->Text = pgReader->GetString(1);
 					lbl_jogador->Text = pgReader->GetString(2);
+
 					lbl_motivacao->Text = pgReader->GetString(3);
+					if(lbl_motivacao->Text->Length > 24) lbl_motivacao->Text = lbl_motivacao->Text->Remove(20) + "... ";
+					toolTip1->SetToolTip(lbl_motivacao, pgReader->GetString(3));
+					
 
 					experiencia	= pgReader->GetInt32(4);
 					nivel		= pgReader->GetInt32(5);
@@ -1406,20 +1413,20 @@ namespace projetoBase{
 		System::Void dd_btn_desenvolvedores_Click(System::Object^  sender, System::EventArgs^  e){
 			MessageBox::Show(
 				"   Este programa foi desenvolvido por Gustavo e Lucas." + "\r\n"
-				"   Este progama é um trabalho da diciplina de Informatica Aplicada" + "\r\n"
+				"   Este progama é um trabalho da disciplina de Informatica Aplicada" + "\r\n"
 				"   Esta é apenas uma versão pre-alpha, muitas noites sem dormir" + "\r\n"
-				"e muitos litro de café serão necessarios até o lançamento final" + "\r\n"
+				"e muitos litros de café serão necessarios até o lançamento final." + "\r\n"
 				"   E lembre-se, sempre é melhor chamar o Saul",
 				"Desenvolvedores");
 		}
 		System::Void dd_btn_problemas_Click(System::Object^  sender, System::EventArgs^  e){
 			MessageBox::Show(
-				"   Antes de usar o programa, lemre-se de instalar o postgresql," + "\r\n"
+				"   Antes de usar o programa, lembre-se de instalar o postgresql," + "\r\n"
 				"criar o banco de dados chamado 'rpg3' e popular ele (um arquivo" + "\r\n"
-				"'CreateInsert.sql' é disponibilisado junto com este programa para" + "\r\n"
+				"'CreateInsert.sql' é disponibilizado junto com este programa para" + "\r\n"
 				"criar as tabelas e os dados, execute ele pelo pgAdmin)" + "\r\n"
 				"   Esta é apenas uma versão pre-alpha, muitas noites sem dormir e" + "\r\n"
-				"muitos litro de café serão necessarios até o lançamento final" + "\r\n"
+				"muitos litro de café serão nescessarios até o lançamento final" + "\r\n"
 				"   E lembre-se, sempre é melhor chamar o Saul",
 				"Problemas?");
 		}
@@ -1447,80 +1454,81 @@ namespace projetoBase{
 			loadPersonagem();
 		}
 		System::Void dd_file_export_Click(System::Object^  sender, System::EventArgs^  e){
-			//if(DialogResult
-			saveFileDialog->ShowDialog();
-
-			return;
+			if(saveFileDialog->ShowDialog() == ::System::Windows::Forms::DialogResult::Cancel) return;
 			
 			try{
-				IO::FileStream^ f = gcnew IO::FileStream(saveFileDialog->FileName, IO::FileMode::CreateNew);
+				IO::FileStream^ f = gcnew IO::FileStream(saveFileDialog->FileName, IO::FileMode::Create);
 				PgSqlCommand^ pgCommand = gcnew PgSqlCommand(
 					"SELECT "
 					+"personagem, jogador, motivacao, "
 					+"experiencia, nivel, mana_max, mana, vida_max, vida, raca, classe, "
-					+"personagem.atributos[1], "
-					+"personagem.atributos[2], "
-					+"personagem.atributos[3], "
-					+"personagem.atributos[4], "
+					+"atributos[1], "
+					+"atributos[2], "
+					+"atributos[3], "
+					+"atributos[4], "
 					+"defesa[1], "
 					+"defesa[2], "
 					+"defesa[3], "
 					+"carga[1], "
 					+"carga[2], "
 					+"carga[3] "
-					" FROM personagem WHERE id = " + id, pgc);
+					" FROM personagem WHERE id = "+id, pgc);// +id, pgc);
 				pgc->Open();
-				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				PgSqlDataReader^ pgReader;
+				pgReader = pgCommand->ExecuteReader();
+				String^ res="";
 				if(pgReader->Read()){
-					f->Write((array<unsigned char>^)pgReader->GetString( 0)->ToCharArray(), 0, pgReader->GetString( 0)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 1)->ToCharArray(), 0, pgReader->GetString( 1)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 2)->ToCharArray(), 0, pgReader->GetString( 2)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 3)->ToCharArray(), 0, pgReader->GetString( 3)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 4)->ToCharArray(), 0, pgReader->GetString( 4)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 5)->ToCharArray(), 0, pgReader->GetString( 5)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 6)->ToCharArray(), 0, pgReader->GetString( 6)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 7)->ToCharArray(), 0, pgReader->GetString( 7)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 8)->ToCharArray(), 0, pgReader->GetString( 8)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString( 9)->ToCharArray(), 0, pgReader->GetString( 9)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(10)->ToCharArray(), 0, pgReader->GetString(10)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(11)->ToCharArray(), 0, pgReader->GetString(11)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(12)->ToCharArray(), 0, pgReader->GetString(12)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(13)->ToCharArray(), 0, pgReader->GetString(13)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(14)->ToCharArray(), 0, pgReader->GetString(14)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(15)->ToCharArray(), 0, pgReader->GetString(15)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(16)->ToCharArray(), 0, pgReader->GetString(16)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(17)->ToCharArray(), 0, pgReader->GetString(17)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(18)->ToCharArray(), 0, pgReader->GetString(18)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(19)->ToCharArray(), 0, pgReader->GetString(19)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(20)->ToCharArray(), 0, pgReader->GetString(20)->Length); f->WriteByte(',');
-					f->Write((array<unsigned char>^)pgReader->GetString(21)->ToCharArray(), 0, pgReader->GetString(21)->Length);
+					res += pgReader->GetString(0)+",";
+					res += pgReader->GetString(1)+",";
+					res += pgReader->GetString(2)+",";
+					res += pgReader->GetString(3)+",";
+					res += pgReader->GetString(4)+",";
+					res += pgReader->GetString(5)+",";
+					res += pgReader->GetString(6)+",";
+					res += pgReader->GetString(7)+",";
+					res += pgReader->GetString(8)+",";
+					res += pgReader->GetString(9)+",";
+					res += pgReader->GetString(10)+",";
+					res += pgReader->GetString(11)+",";
+					res += pgReader->GetString(12)+",";
+					res += pgReader->GetString(13)+",";
+					res += pgReader->GetString(14)+",";
+					res += pgReader->GetString(15)+",";
+					res += pgReader->GetString(16)+",";
+					res += pgReader->GetString(17)+",";
+					res += pgReader->GetString(18)+",";
+					res += pgReader->GetString(19) + ",";
+					res += pgReader->GetString(20) + ";";
 				}
-				f->WriteByte(';');
+				
+				pgCommand = gcnew PgSqlCommand(
+					"SELECT "
+					" h_id "
+					" FROM m_hab WHERE p_id = " + id, pgc);
+				pgc->Open();
+				pgReader = pgCommand->ExecuteReader();
+				if(pgReader->Read()){
+					res += pgReader->GetString(0);
+				}while(pgReader->Read()){
+					res += ","+pgReader->GetString(0);
+				}
+				res += ";";
+				
+				pgCommand = gcnew PgSqlCommand(
+					" SELECT "
+					" e_id, quantidade, n_usando "
+					" FROM m_equip WHERE p_id = " + id, pgc);
+				pgc->Open();
+				pgReader = pgCommand->ExecuteReader();
+				if(pgReader->Read()){
+					res += pgReader->GetString(0) +","+ pgReader->GetString(1) + "," + pgReader->GetString(2);
+				}while(pgReader->Read()){
+					res += "/"+pgReader->GetString(0) + "," + pgReader->GetString(1) + "," + pgReader->GetString(2);
+				}
 
-				//pgCommand = gcnew PgSqlCommand(
-				//	" SELECT "
-				//	" h_id "
-				//	" FROM m_hab WHERE p_id = " + id, pgc);
-				//pgc->Open();
-				//PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
-				//if(pgReader->Read()){
-				//	f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
-				//}while(pgReader->Read()){
-				//	f->WriteByte(','); f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
-				//}
-				//f->WriteByte(';');
-				//
-				//pgCommand = gcnew PgSqlCommand(
-				//	" SELECT "
-				//	" e_id, quantidade, n_usando "
-				//	" FROM m_equip WHERE p_id = " + id, pgc);
-				//pgc->Open();
-				//PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
-				//if(pgReader->Read()){
-				//	f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
-				//}while(pgReader->Read()){
-				//	f->WriteByte(','); f->Write((array<unsigned char>^)pgReader->GetString(0)->ToCharArray(), 0, pgReader->GetString(0)->Length);
-				//}
+				array<Byte>^info = (gcnew UTF8Encoding(true))->GetBytes(res);
+				f->Write(info, 0, info->Length);
+				f->Close();
 			} catch(Exception^){}
 		}
 	};

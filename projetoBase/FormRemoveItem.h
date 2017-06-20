@@ -213,7 +213,7 @@ namespace projetoBase {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"FormRemoveItem";
-			this->Text = L"FormRemoveItem";
+			this->Text = L"Remove Item";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_quant))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();

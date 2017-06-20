@@ -151,6 +151,7 @@ namespace projetoBase {
 			// 
 			this->nud_quant->Location = System::Drawing::Point(83, 52);
 			this->nud_quant->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4){ 500, 0, 0, 0 });
+			this->nud_quant->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4){ 1, 0, 0, 0 });
 			this->nud_quant->Name = L"nud_quant";
 			this->nud_quant->Size = System::Drawing::Size(120, 20);
 			this->nud_quant->TabIndex = 7;
@@ -198,7 +199,7 @@ namespace projetoBase {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"FormNewEquip";
-			this->Text = L"FormNewEquip";
+			this->Text = L"New Equip";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nud_quant))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();

@@ -152,7 +152,7 @@ namespace projetoBase {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"FormLevelUp";
-			this->Text = L"FormLevelUp";
+			this->Text = L"LevelUp";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
