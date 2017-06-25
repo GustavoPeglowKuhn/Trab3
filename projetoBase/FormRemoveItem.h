@@ -17,14 +17,11 @@ namespace projetoBase {
 	/// <summary>
 	/// Summary for FormRemoveItem
 	/// </summary>
-	public ref class FormRemoveItem : public System::Windows::Forms::Form{
+	public ref class FormRemoveItem : public System::Windows::Forms::Form {
 	private:
 		List<Equipamento^>^ equipamentos;
 		PgSqlConnection^ pgc;
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::Label^  lbl_peso;
-	private: System::Windows::Forms::Button^  btn_all;
-			 int id;
+		int id;
 
 	public:
 		FormRemoveItem(PgSqlConnection^ _pgc, int _id)
@@ -47,17 +44,18 @@ namespace projetoBase {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Button^  btn_remove;
-	protected:
-	private: System::Windows::Forms::Button^  btn_cancel;
-	private: System::Windows::Forms::NumericUpDown^  nud_quant;
-	private: System::Windows::Forms::Label^  lbl_qt;
-	private: System::Windows::Forms::Label^  label6;
-	private: System::Windows::Forms::Label^  label4;
-
-
-	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::ComboBox^  cb_item;
+	private:
+		System::Windows::Forms::Label^  label2;
+		System::Windows::Forms::Label^  lbl_peso;
+		System::Windows::Forms::Button^  btn_all;
+		System::Windows::Forms::Button^  btn_remove;
+		System::Windows::Forms::Button^  btn_cancel;
+		System::Windows::Forms::NumericUpDown^  nud_quant;
+		System::Windows::Forms::Label^  lbl_qt;
+		System::Windows::Forms::Label^  label6;
+		System::Windows::Forms::Label^  label4;
+		System::Windows::Forms::Label^  label1;
+		System::Windows::Forms::ComboBox^  cb_item;
 
 	private:
 		/// <summary>
@@ -229,6 +227,10 @@ namespace projetoBase {
 					"FROM equipamento, m_equip WHERE e_id = id AND p_id = " + id, pgc);
 				pgc->Open();
 				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
+				
+				//cb_item->Items->Clear();
+				//while(pgReader->Read()) cb_item->Items->Add(pgReader->GetString(1));	//nome
+				
 				equipamentos = gcnew List<Equipamento^>();
 				while(pgReader->Read()){
 					equipamentos->Add(gcnew Equipamento(
@@ -261,7 +263,7 @@ namespace projetoBase {
 				pgCommand->ExecuteNonQuery();
 				btn_remove->Enabled = false;
 			} catch(Exception^){}
-			loadEquipamentos();;
+			loadEquipamentos();
 		}
 		System::Void cb_item_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e){
 			int listId = cb_item->SelectedIndex;

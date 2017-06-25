@@ -414,27 +414,26 @@ namespace projetoBase{
 				}
 			} catch(Exception^){}
 		}
-		System::Void btn_select_Click(System::Object^  sender, System::EventArgs^  e){
-			FormFicha^ formFicha = gcnew FormFicha(pgSqlConnection1, id);
-			this->Hide();
-			formFicha->ShowDialog();
+
+		void changeForm(Form^ newForm){
+			//this->Enabled = false;		//deixa a tela de fundo cinza para dar um efeito
+			this->Hide();					//oculta
+			newForm->ShowDialog();		//fica travado até fechar o formDB
 			this->Show();
-			//this->formFicha->Show();
+			//this->Enabled = true;
+		}
+		System::Void btn_select_Click(System::Object^  sender, System::EventArgs^  e){
+			changeForm(gcnew FormFicha(pgSqlConnection1, id));
 		}
 		System::Void btn_new_Click(System::Object^  sender, System::EventArgs^  e){
-			FormNovo^ formNovo = gcnew FormNovo(pgSqlConnection1);
-			this->Hide();
-			formNovo->ShowDialog();		//fica travado até fechar o formNovo
-			this->Show();
+			changeForm(gcnew FormNovo(pgSqlConnection1));
 			get_cb_jogador_items();		//le o personagem novo
 		}
 		System::Void dd_btn_ch_conn_Click(System::Object^  sender, System::EventArgs^  e){
-			FormDB^ formDB = gcnew FormDB(pgSqlConnection1);
-			this->Enabled = false;		//deixa a tela de fundo cinza para dar um efeito
-			formDB->ShowDialog();		//fica travado até fechar o formDB
-			this->Enabled = true;
+			changeForm(gcnew FormDB(pgSqlConnection1));
 			get_cb_jogador_items();		//le os personagens na nova conecção
 		}
+
 		System::Void trocarToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e){
 			if(dd_txt_db_name->Text->Length == 0){
 				MessageBox::Show("Digite o nome da base de dados no campo acima", "Nome da base de dados Invalido");
@@ -483,17 +482,16 @@ namespace projetoBase{
 				pgCommand->ExecuteNonQuery();
 
 				for each (String^ hab in h){
-					pgCommand = gcnew PgSqlCommand("INSERT INTO m_hab (p_id, h_id) VALUES ("
-						"(currval('personagem_id_seq'::regclass))," + hab + "); ", pgSqlConnection1);
+					pgCommand->CommandText = "INSERT INTO m_hab (p_id, h_id) VALUES ("
+						"(currval('personagem_id_seq'::regclass))," + hab + "); ";
 					pgSqlConnection1->Open();
 					pgCommand->ExecuteNonQuery();
 				}
 				
 				array<String^>^ i = phi[2]->Split('/');
 				for each (String^ item in i){
-					pgCommand = gcnew PgSqlCommand("INSERT INTO m_equip (p_id, e_id, quantidade, n_usando) VALUES ("
-						"(currval('personagem_id_seq'::regclass)), "
-						+ item + "); ", pgSqlConnection1);
+					pgCommand->CommandText = "INSERT INTO m_equip (p_id, e_id, quantidade, n_usando) "
+						" VALUES ( (currval('personagem_id_seq'::regclass) ), " + item + "); ";
 					pgSqlConnection1->Open();
 					pgCommand->ExecuteNonQuery();
 				}

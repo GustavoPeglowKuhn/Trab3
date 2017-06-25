@@ -53,10 +53,8 @@ namespace projetoBase {
 		System::Windows::Forms::Label^  lbl_peso_total;
 		System::Windows::Forms::Label^  label6;
 		System::Windows::Forms::NumericUpDown^  nud_quant;
-	private: System::Windows::Forms::Button^  btn_cancel;
-
-	private: System::Windows::Forms::Button^  btn_ok;
-
+		System::Windows::Forms::Button^  btn_cancel;
+		System::Windows::Forms::Button^  btn_ok;
 
 		/// <summary>
 		/// Required designer variable.

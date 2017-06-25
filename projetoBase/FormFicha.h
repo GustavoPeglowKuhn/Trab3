@@ -6,8 +6,10 @@
 #include "FormLevelUp.h"
 #include "FormD6.h"
 
-#include "Habilidade.h"
-#include "Equipamento.h"
+enum habilidadeTipo{ acao = 0, reacao = 1, suporte = 2 };
+
+//#include "Habilidade.h"
+//#include "Equipamento.h"
 
 namespace projetoBase{
 	using namespace System;
@@ -29,7 +31,6 @@ namespace projetoBase{
 	private:
 		PgSqlConnection^ pgc;
 		System::Windows::Forms::ToolTip^ toolTip1 = gcnew System::Windows::Forms::ToolTip();
-		//DateTime open;
 
 		//propriedades do personagem atual
 		int id, raca, classe;
@@ -37,14 +38,13 @@ namespace projetoBase{
 		int forca, agilidade, inteligencia, vontade;
 		int bloqueio, esquiva, determinacao;
 		int basica, pesada, maxima;
-		List<Habilidade^>^ habilidades;
-		List<Equipamento^>^ equipamentos;
+		//List<Habilidade^>^ habilidades;
+		//List<Equipamento^>^ equipamentos;
 		//!propriedades do personagem atual
 
 	public:
 		FormFicha( PgSqlConnection^ _pgc, int _id){
 			InitializeComponent();
-			//open = DateTime::Now;
 
 			////double buffer
 			//this->SetStyle(static_cast<ControlStyles>(
@@ -1259,17 +1259,6 @@ namespace projetoBase{
 					nud_vida->Maximum = vida_max - vida;
 					nud_mana->Minimum = -mana;
 					nud_mana->Maximum = mana_max - mana;
-
-					////le a raça e a classe pelos id de cada tabela armazenados na tabela personagem
-					//PgSqlCommand^ pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM raca WHERE id = " + raca, pgc);// pgSqlConnection1);
-					//PgSqlDataReader^ pgReader2 = pgCommand2->ExecuteReader();
-					//pgReader2->Read();
-					//lbl_raca->Text = pgReader2->GetString(0);
-					//
-					//pgCommand2 = gcnew PgSqlCommand("SELECT nome FROM classe WHERE id = " + classe, pgc);// pgSqlConnection1);
-					//pgReader2 = pgCommand2->ExecuteReader();
-					//pgReader2->Read();
-					//lbl_classe->Text = pgReader2->GetString(0);
 				}
 			} finally {
 				//pgReader->Close();
@@ -1283,17 +1272,17 @@ namespace projetoBase{
 					"FROM habilidade, m_hab WHERE h_id = id AND p_id = " + id, pgc);
 				pgc->Open();
 				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
-				habilidades = gcnew List<Habilidade^>();
-				while(pgReader->Read()){
-					habilidades->Add(gcnew Habilidade(
-						pgReader->GetInt32(0),					//id
-						(habilidadeTipo)pgReader->GetInt32(1),	//tipo
-						pgReader->GetString(2),					//nome
-						pgReader->GetString(3)					//bonus
-					));
-				}
+
 				txt_habilidade->Clear();
-				for each(Habilidade^ h in habilidades) txt_habilidade->AppendText(formatedHabilidade(h));
+				while(pgReader->Read()){
+					String^ res = pgReader->GetString(2);			//nome
+					if(res->Length > 30) res = res->Remove(26) + "... ";
+					else res = res->PadRight(30);
+					int ht = pgReader->GetInt32(1);					//tipo
+					res += (ht == acao ? "Ação       " : (ht == reacao ? "Reação     " : "Suporte    "));
+					res += pgReader->GetString(3) + "\r\n";			//bonus
+					txt_habilidade->AppendText(res);
+				}
 			} catch(Exception^){}
 		}
 		void loadEquipamentos(){
@@ -1303,82 +1292,55 @@ namespace projetoBase{
 					"FROM equipamento, m_equip WHERE e_id = id AND p_id = " + id, pgc);
 				pgc->Open();
 				PgSqlDataReader^ pgReader = pgCommand->ExecuteReader();
-				equipamentos = gcnew List<Equipamento^>();
-				while(pgReader->Read()){
-					equipamentos->Add(gcnew Equipamento(
-						pgReader->GetInt32(0),					//id
-						pgReader->GetString(1),					//nome
-						pgReader->GetFloat(2),					//peso
-						pgReader->GetInt32(3),					//quantidade
-						pgReader->GetInt32(4)					//n_usando
-					));
-				}
-				txt_equipamentos->Clear();
+				
 				float pesoTotal = 0;
-				for each(Equipamento^ e in equipamentos){
-					txt_equipamentos->AppendText(formatedEquipamento(e));
-					pesoTotal += e->peso*e->quantidade;
+				txt_equipamentos->Clear();
+
+				while(pgReader->Read()){
+					String^ res = pgReader->GetString(1);
+					if(res->Length > 46) res = res->Remove(32) + "... ";
+					else res = res->PadRight(46);
+					res += "" + pgReader->GetInt32(3);
+					int q = pgReader->GetInt32(3);
+					float p = pgReader->GetFloat(2);
+					float pt = p*q;
+					pesoTotal += pt;
+					res = res->PadRight(57) + pt + "\r\n";
+					txt_equipamentos->AppendText(res);
 				}
+
 				lbl_peso_carga->Text = "" + pesoTotal;
 			}catch(Exception^){}
 		}
 
-		String^ formatedHabilidade(Habilidade^ h){
-			String^ res = h->nome;
-			if(res->Length > 30) res = res->Remove(26) + "... ";
-			else res = res->PadRight(30);
-			res += (h->tipo == acao ? "Ação       " : (h->tipo == reacao ? "Reação     " : "Suporte    "));
-			res += h->bonus + "\r\n";
-			return res;
-		}
-		String^ formatedEquipamento(Equipamento^ e){
-			String^ res = e->nome;
-			if(res->Length > 46) res = res->Remove(32) + "... ";
-			else res = res->PadRight(46);
-			res += ""+e->quantidade;
-			res = res->PadRight(57) + e->peso*e->quantidade + "\r\n";
-			return res;
-		}
-
-		//int rand6(){ return ((int)DateTime::Now.Subtract(open).TotalSeconds) % 6; }
-
-		System::Void btn_equip_add_Click(System::Object^  sender, System::EventArgs^  e){
-			FormNewEquip^ formNewEquip = gcnew FormNewEquip(pgc, id);
+		void changeForm(Form^ newForm){
 			this->Enabled = false;
-			formNewEquip->ShowDialog();
+			newForm->ShowDialog();		//fica travado até fechar o form
 			this->Enabled = true;
+		}
+		System::Void btn_equip_add_Click(System::Object^  sender, System::EventArgs^  e){
+			changeForm(gcnew FormNewEquip(pgc, id));
 			loadEquipamentos();
 		}
 		System::Void btn_equip_remove_Click(System::Object^  sender, System::EventArgs^  e){
-			FormRemoveItem^ formRemoveItem = gcnew FormRemoveItem(pgc, id);
-			this->Enabled = false;
-			formRemoveItem->ShowDialog();
-			this->Enabled = true;
+			changeForm(gcnew FormRemoveItem(pgc, id));
 			loadEquipamentos();
 		}
-		
 		System::Void btn_hab_add_Click(System::Object^  sender, System::EventArgs^  e){
-			FormHabilidades^ formHabilidades = gcnew FormHabilidades(pgc, id);
-			this->Enabled = false;
-			formHabilidades->ShowDialog();
-			this->Enabled = true;
+			changeForm(gcnew FormHabilidades(pgc, id));
 			loadHabilidades();
+		}
+		System::Void btn_d6_Click(System::Object^  sender, System::EventArgs^  e){
+			try{
+				int i = Int32::Parse(((String^)safe_cast<ToolStripButton^>(sender)->Tag));
+				changeForm(gcnew FormD6(i, forca, agilidade, inteligencia, vontade));
+			} catch(Exception^){}
 		}
 
 		System::Void menuToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e){
 			this->Close();
 		}
 
-		System::Void btn_d6_Click(System::Object^  sender, System::EventArgs^  e){
-			try{
-				int i = Int32::Parse(((String^)safe_cast<ToolStripButton^>(sender)->Tag));
-				FormD6^ formD6 = gcnew FormD6(i, forca, agilidade, inteligencia, vontade);
-				this->Enabled = false;
-				formD6->ShowDialog();
-				this->Enabled = true;
-			} catch(Exception^){}
-		}
-		
 		System::Void btn_vida_Click(System::Object^  sender, System::EventArgs^  e){
 			vida += (int)nud_vida->Value;
 			txt_vida->Text = "" + vida;
@@ -1437,10 +1399,7 @@ namespace projetoBase{
 			if(experiencia >= 10){
 				experiencia -= 10;
 				nivel++;
-				FormLevelUp^ formLevelUp = gcnew FormLevelUp(pgc, id, experiencia, nivel);
-				this->Enabled = false;
-				formLevelUp->ShowDialog();
-				this->Enabled = true;
+				changeForm(gcnew FormLevelUp(pgc, id, experiencia, nivel));
 
 			} else{	//não subiu de nivel
 				try{
@@ -1454,6 +1413,7 @@ namespace projetoBase{
 			loadPersonagem();
 		}
 		System::Void dd_file_export_Click(System::Object^  sender, System::EventArgs^  e){
+			//se clicar em cancel acaba a função
 			if(saveFileDialog->ShowDialog() == ::System::Windows::Forms::DialogResult::Cancel) return;
 			
 			try{
@@ -1462,49 +1422,20 @@ namespace projetoBase{
 					"SELECT "
 					+"personagem, jogador, motivacao, "
 					+"experiencia, nivel, mana_max, mana, vida_max, vida, raca, classe, "
-					+"atributos[1], "
-					+"atributos[2], "
-					+"atributos[3], "
-					+"atributos[4], "
-					+"defesa[1], "
-					+"defesa[2], "
-					+"defesa[3], "
-					+"carga[1], "
-					+"carga[2], "
-					+"carga[3] "
+					+"atributos[1], atributos[2], atributos[3], atributos[4], "
+					+"defesa[1], defesa[2], defesa[3], carga[1], carga[2], carga[3] "
 					" FROM personagem WHERE id = "+id, pgc);// +id, pgc);
 				pgc->Open();
 				PgSqlDataReader^ pgReader;
 				pgReader = pgCommand->ExecuteReader();
 				String^ res="";
 				if(pgReader->Read()){
-					res += pgReader->GetString(0)+",";
-					res += pgReader->GetString(1)+",";
-					res += pgReader->GetString(2)+",";
-					res += pgReader->GetString(3)+",";
-					res += pgReader->GetString(4)+",";
-					res += pgReader->GetString(5)+",";
-					res += pgReader->GetString(6)+",";
-					res += pgReader->GetString(7)+",";
-					res += pgReader->GetString(8)+",";
-					res += pgReader->GetString(9)+",";
-					res += pgReader->GetString(10)+",";
-					res += pgReader->GetString(11)+",";
-					res += pgReader->GetString(12)+",";
-					res += pgReader->GetString(13)+",";
-					res += pgReader->GetString(14)+",";
-					res += pgReader->GetString(15)+",";
-					res += pgReader->GetString(16)+",";
-					res += pgReader->GetString(17)+",";
-					res += pgReader->GetString(18)+",";
-					res += pgReader->GetString(19) + ",";
+					for(int i=0; i<20; i++)
+						res += pgReader->GetString(i) + ",";
 					res += pgReader->GetString(20) + ";";
 				}
 				
-				pgCommand = gcnew PgSqlCommand(
-					"SELECT "
-					" h_id "
-					" FROM m_hab WHERE p_id = " + id, pgc);
+				pgCommand->CommandText = "SELECT h_id FROM m_hab WHERE p_id = " + id;
 				pgc->Open();
 				pgReader = pgCommand->ExecuteReader();
 				if(pgReader->Read()){
@@ -1514,12 +1445,12 @@ namespace projetoBase{
 				}
 				res += ";";
 				
-				pgCommand = gcnew PgSqlCommand(
-					" SELECT "
-					" e_id, quantidade, n_usando "
-					" FROM m_equip WHERE p_id = " + id, pgc);
+				pgCommand->CommandText = " SELECT e_id, quantidade, n_usando "
+					" FROM m_equip WHERE p_id = " + id;
 				pgc->Open();
 				pgReader = pgCommand->ExecuteReader();
+
+				//esse if serve apenas para gerar a formatação do arquio, há uma '/' entre os elementos
 				if(pgReader->Read()){
 					res += pgReader->GetString(0) +","+ pgReader->GetString(1) + "," + pgReader->GetString(2);
 				}while(pgReader->Read()){
